@@ -13,10 +13,10 @@ function App() {
   return (
     <div >
       <Navbar />
-      <PostDetails />
+      {/* <PostDetails />
       {/* <FoodDetails /> */}
-      {/* <Login />
-      <Signup /> */}
+      <Login />
+      {/* <Signup /> */}
       {/* <FoodCard />
       <ImagePostCard />  */}
       <Footer />
