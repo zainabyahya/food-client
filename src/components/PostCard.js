@@ -1,34 +1,29 @@
 import React, { useState } from 'react'
 import image from '../assets/1.jpeg';
-import { FaRegCommentAlt, FaHeart, FaBookmark, FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import { FaRegCommentAlt, FaBookmark, FaRegBookmark } from "react-icons/fa";
+import FormattedContent from './FormattedContent'; // 
+import { useNavigate } from 'react-router-dom';
 
+const PostCard = ({ post, showImage, showUser }) => {
+    const navigate = useNavigate();
 
-
-const PostCard = () => {
-    const [showImage, setShowImage] = useState(true);
-    const [showUser, setShowUser] = useState(true);
-
-
+    const handlePostClick = () => {
+        navigate(`/community/${post._id}`);
+    };
     return (
-        <div className='bg-gray w-3/5 p-5 flex flex-col justify-center items-end gap-10 m-auto rounded-md'>
+        <div className='bg-gray w-full p-5 flex flex-col justify-center items-end gap-10 rounded-md' onClick={handlePostClick}>
             {showUser && <div className='flex flex-row-reverse justify-center items-center gap-2'>
-                <img src={image} alt='profile' className='w-[3rem] rounded-full' />
-                <span className='text-xl'>زينب ليث</span>
+                <img src={post.author.image} alt='profile' className='w-[3rem] rounded-full' />
+                <span className='text-xl'>{post.author.firstName} {post.author.lastName}</span>
             </div>}
             {showImage &&
-                <img src={image} alt="post" className='rounded-md w-4/5 h-[15rem] object-cover overflow-hidden m-auto' />
+                <img src={post.image} alt="post" className='rounded-md w-4/5 h-[15rem] object-cover overflow-hidden m-auto' />
             }            <div className='flex flex-col justify-center items-end'>
-                <h1 className='text-bold text-2xl'> ما هي الطرق التي يمكن بها استخدام قشر الموز بدلًا من رميه؟</h1>
-                <p className='text-end'>
-                    البستنة:
-                    سماد طبيعي: يمكن وضع قشور الموز في التربة أو إضافتها إلى كومة السماد لزيادة محتوى التربة من البوتاسيوم والمغذيات الأخرى.
-                    جذب الطيور: قطع قشور الموز إلى قطع صغيرة ووضعها في الحديقة لجذب الطيور.
-                    طرد الحشرات: يمكن وضع قطع صغيرة من قشور الموز حول النباتات لردع .....
-                </p>
-                <span className='py-5 text-secondary hover:underline'>..رؤية المزيد</span>
+                <h1 className='text-bold text-2xl'> {post.title}</h1>
+                <FormattedContent className='text-end' content={post.content} />
+                <span className='py-5 text-secondary hover:underline' > ..رؤية المزيد</span>
             </div>
             <div className='self-start flex justify-center items-center gap-2 text-secondary'>
-                <FaRegHeart className='cursor-pointer' />
                 <FaRegBookmark className='cursor-pointer' />
                 <FaRegCommentAlt className='cursor-pointer' />
             </div>
