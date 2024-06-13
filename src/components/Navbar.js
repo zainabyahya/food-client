@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { BsList } from "react-icons/bs";
+import AddFood from './AddFood';
 
 
 const Navbar = ({ user }) => {
     const navigate = useNavigate();
     const [dropdown, setDropdown] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
 
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
     return (
         <div>
             <div className='w-full h-[5rem] text-3xl bg-primary text-white md:hidden flex flex-row-reverse justify-between items-center'>
@@ -28,16 +36,22 @@ const Navbar = ({ user }) => {
                                 return
                             }
                             else if (id === "4") {
-                                return <span key={id} onClick={() => { navigate("/register") }} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
+                                return <span key={id} onClick={() => { navigate("/auth") }} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
 
                             } else {
                                 return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
                             }
-
+                        } else {
+                            if (id === "4") {
+                                return <span key={id} onClick={handleOpenModal} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
+                            } else {
+                                return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
+                            }
                         }
-                        <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
                     })
                 }
+                <AddFood isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+
             </div>
             <div className='hidden md:block w-full l bg-primary'>
                 <div className='m-auto w-3/5 flex h-[5rem] text-xl text-white flex-row-reverse justify-between items-end '>
@@ -57,10 +71,19 @@ const Navbar = ({ user }) => {
                                     return
                                 }
                                 else if (id === "5") {
-                                    return <span key={id} onClick={() => { navigate("/register") }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
+                                    return <span key={id} onClick={() => { navigate("/auth") }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
+                                } else {
+                                    return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
+
+                                }
+
+                            } else {
+                                if (id === "5") {
+                                    return <span key={id} onClick={handleOpenModal} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
+                                } else {
+                                    return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
                                 }
                             }
-                            return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
                         })
                     }
                 </div>

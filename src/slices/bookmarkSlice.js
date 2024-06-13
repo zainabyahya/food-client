@@ -69,7 +69,6 @@ const bookmarkSlice = createSlice({
             })
             .addCase(handleBookmark.fulfilled, (state, action) => {
                 state.loading = false;
-                // Update bookmarks after adding or removing a bookmark
                 state.bookmarks = action.payload;
             })
             .addCase(handleBookmark.rejected, (state, action) => {

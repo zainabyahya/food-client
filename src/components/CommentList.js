@@ -10,7 +10,7 @@ const CommentList = ({ post }) => {
     const commentsList = useSelector((state) => state.comment.comments);
     console.log("🚀 ~ CommentList ~ commentsList:", commentsList)
     useEffect(() => {
-        dispatch(fetchCommentsByPost(postId));
+        dispatch(fetchCommentsByPost(post._id));
     }, [dispatch, postId]);
     return (
         <div className='w-full flex flex-col items-end justify-center gap-3'>

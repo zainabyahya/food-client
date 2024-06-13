@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../slices/authSlice';
 import { useParams, useNavigate } from 'react-router-dom'
-import { FaRegCommentAlt, FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { IoPencil, IoTrash } from "react-icons/io5";
-
 import FormattedContent from './FormattedContent';
 import { handleBookmark, getAllBookmarks } from "../slices/bookmarkSlice";
 import { deleteBlogPost } from '../slices/blogSlice';
@@ -14,8 +14,8 @@ const PostDetails = ({ post }) => {
     const { postId } = useParams();
     const [saved, setSaved] = useState(false);
     let bookmarks = useSelector((state) => state.bookmark.bookmarks);
-    const currentUser = useSelector(state => state.auth.user)
-
+    const currentUser = useSelector(selectUser);
+    const author = post.author;
     const handleEdit = () => {
         navigate(`/edit/${post._id}`);
     };
@@ -36,34 +36,36 @@ const PostDetails = ({ post }) => {
 
     }, [dispatch]);
 
-    useEffect(() => {
-        if (currentUser) {
-            const bookmark = bookmarks.some(bookmark => bookmark.user === currentUser.userId &&
-                bookmark.posts.some(post => post._id === postId)
-            );
-            setSaved(bookmark);
-        }
-    }, [bookmarks]);
+    // useEffect(() => {
+    //     if (currentUser) {
+    //         const bookmark = bookmarks.some(bookmark => bookmark.user === currentUser.userId &&
+    //             bookmark.posts.some(post => post._id === postId)
+    //         );
+    //         setSaved(bookmark);
+    //     }
+    // }, [bookmarks]);
 
-
-    let isAuthor = false;
-    if (currentUser) {
-        isAuthor = currentUser.userId && post.author._id === currentUser.userId;
-    }
+    const isAuthor = true
+    // let isAuthor = false;
+    // if (currentUser && post) {
+    //     isAuthor = currentUser.userId && post.author._id === currentUser.userId;
+    // }
 
     return (
         <div className='flex flex-col items-end gap-5 bg-white w-full min-h-[80vh] p-10 lg:p-20 rounded-lg'>
-            <div className='flex flex-row-reverse justify-between items-center'>
-                <div className='flex flex-row-reverse justify-center items-center gap-2'>
-                    {/* <img src={post.author.image} alt='profile' className='w-[3rem] h-[3rem]  rounded-full' /> */}
-                    {/* <span className='text-xl'>{post.author.firstName} {post.author.lastName}</span> */}
-                </div>
+            <div className='flex flex-row-reverse justify-between items-center w-full '>
+                {author &&
+                    <div className='flex flex-row-reverse justify-center items-center gap-2'>
+                        <img src={author.image} alt='profile' className='w-[3rem] h-[3rem]  rounded-full' />
+                        <span className='text-xl'>{author.firstName} {author.lastName}</span>
+                    </div>
+                }
                 {isAuthor && (
                     <div className='flex gap-2'>
                         <button onClick={handleEdit} className='text-secondary'>
                             <IoPencil />
                         </button>
-                        <button onClick={handleDelete} className='textsecondary'>
+                        <button onClick={handleDelete} className='text-secondary'>
                             <IoTrash />
                         </button>
                     </div>

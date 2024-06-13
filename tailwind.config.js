@@ -7,6 +7,9 @@ module.exports = {
         'vibes': ["'Vibes"],
       },
 
+      backgroundImage: {
+        'map': "url('./src/assets/map.jpeg')",
+      }
     },
     colors: {
       'primary': '#1EA896',
