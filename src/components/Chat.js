@@ -2,17 +2,20 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from '../slices/authSlice'
 import { getMessagesByChatroom } from '../slices/messageSlice'
+import { getConfirmationByPostId } from './confirmationSlice';
 
 const Chat = ({ chatroomId }) => {
     const dispatch = useDispatch();
     const messages = useSelector((state) => state.message.messages);
     const currentUser = useSelector(selectUser);
+    const { confirmation } = useSelector((state) => state.confirmation);
 
     const isAuthor = (message) => {
         return message.user._id === currentUser.userId;
     }
     useEffect(() => {
         dispatch(getMessagesByChatroom(chatroomId));
+        dispatch(getConfirmationByPostId(confirmation._id))
     }, [dispatch]);
 
     return (

@@ -13,6 +13,8 @@ import Signup from "./components/Signup";
 import AuthPage from "./pages/AuthPage";
 import Community from "./pages/Community";
 import Location from './components/Location';
+import HomePage from './pages/HomePage';
+import ChatPage from './pages/chatPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,10 +29,14 @@ function App() {
       <div className='min-h-[70vh]'>
         <Routes>
           < Route path="/auth" element={<AuthPage />} />
+          < Route path="/" element={<HomePage />} />
           < Route path="/login" element={<Login />} />
           < Route path="/signup" element={<Signup />} />
           < Route path="/community" element={<Community />} />
           < Route path={`/community/:postId`} element={< BlogPostPage />} />
+          < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
+          < Route path={`/chat/:userId`} element={< ChatPage />} />
+
         </Routes>
       </div>
       <Footer />

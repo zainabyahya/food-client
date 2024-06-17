@@ -9,9 +9,9 @@ Modal.setAppElement('#root');
 
 const AddFood = ({ isOpen, onRequestClose }) => {
     const { userLocation, getUserLocation, error } = useUserLocation();
-    console.log("🚀 ~ AddFood ~ userLocation:", userLocation)
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [notes, setNotes] = useState('');
+    const [time, setTime] = useState('');
     const [image, setImage] = useState(null);
 
     const dispatch = useDispatch();
@@ -24,8 +24,9 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         console.log("🚀 ~ handlePost ~ location:", location)
 
         const formData = new FormData();
-        formData.append('notes', title);
-        formData.append('time', content);
+        formData.append('title', title);
+        formData.append('notes', notes);
+        formData.append('time', time);
         formData.append('image', image);
         formData.append('location', JSON.stringify(userLocation));
         formData.append('dateCreated', new Date());
@@ -59,20 +60,28 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                     <input
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         type='text'
-                        placeholder='الملاحظات'
+                        placeholder='العنوان'
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                    <input
+                        className='w-full bg-gray py-2 px-2 rounded-md'
+                        type='text'
+                        placeholder='الملاحظات'
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
                         required
                     />
 
                     <input
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         placeholder='الوقت'
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
                         required
                     />
-                    <span className={`w-full bg-gray p-2 rounded-md `} onClick={getUserLocation} value={userLocation}>
+                    <span className={`w-full bg-gray p-2 rounded-md text-center`} onClick={getUserLocation} value={userLocation}>
                         حدد موقعك
                     </span>
                     <button type='submit' className='bg-secondary text-white p-3 rounded-md w-full'>

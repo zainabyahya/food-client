@@ -64,7 +64,7 @@ const Navbar = ({ user }) => {
                             ['5', 'تبرع بالطعام', '/donate'],
                         ].map(([id, title, url]) => {
                             if (id === "3") {
-                                return <span key={id} className='font-[vibes] p-5 text-4xl lg:text-5xl cursor-pointer '>بالعافية</span>
+                                return <span key={id} className='font-[vibes] p-5 text-4xl lg:text-5xl cursor-pointer' onClick={() => { navigate(url) }}>بالعافية</span>
                             }
                             if (!user) {
                                 if (id === "2" || id === "4") {

@@ -1,12 +1,13 @@
 import React from 'react'
 import { BsArrowRight } from "react-icons/bs";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Chat from '../components/Chat';
 import ChatList from '../components/ChatList';
 import SendMessage from '../components/SendMessage';
-
 const ChatPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const orderInfo = location.state || {};
 
     const handleNavigate = (e) => {
         navigate("/")

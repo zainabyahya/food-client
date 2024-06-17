@@ -6,6 +6,8 @@ import bookmarkReducer from './slices/bookmarkSlice';
 import chatroomReducer from './slices/chatroomSlice';
 import messageReducer from './slices/messageSlice';
 import foodReducer from './slices/foodSlice';
+import confirmationReducer from './slices/confirmationSlice';
+import userReducer from './slices/userSlice';
 
 
 export const store = configureStore({
@@ -17,6 +19,7 @@ export const store = configureStore({
         chatroom: chatroomReducer,
         message: messageReducer,
         food: foodReducer,
-
+        confirmation: confirmationReducer,
+        user: userReducer,
     },
 })
