@@ -13,7 +13,8 @@ export const getMessagesByChatroom = createAsyncThunk(
     async (chatroomId, thunkAPI) => {
         try {
             const response = await instance.get(`/messages/${chatroomId}`);
-            return response.data.foundMessages;
+            console.log("🚀 ~ response:", response)
+            return response.data.allMessages;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }

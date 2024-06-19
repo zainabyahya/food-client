@@ -1,6 +1,6 @@
 // src/slices/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import instance from '../api/instance';
+import instance from "../utils/api";
 
 // Async thunks
 export const getAllUsers = createAsyncThunk('users/getAll', async () => {
@@ -38,7 +38,7 @@ export const updateUserRating = createAsyncThunk(
         return response.data.updatedUser;
     }
 );
-// src/slices/userSlice.js
+
 const userSlice = createSlice({
     name: 'users',
     initialState: {

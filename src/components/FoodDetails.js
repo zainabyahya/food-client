@@ -5,7 +5,7 @@ import { IoLocationOutline, IoTimeOutline, IoStar } from "react-icons/io5";
 import { BsArrowRight } from "react-icons/bs";
 import { getFoodPostById } from '../slices/foodSlice';
 import { selectUser } from '../slices/authSlice';
-import { createConfirmation, getConfirmationByPostId } from './slices/confirmationSlice';
+import { createConfirmation } from '../slices/confirmationSlice';
 
 const FoodDetails = () => {
     const dispatch = useDispatch();
@@ -23,9 +23,8 @@ const FoodDetails = () => {
             post: foodPostId,
         }
 
-        dispatch(createConfirmation(orderInfo))
-
-        navigate(`/chat/${ownerId}`, { state: orderInfo })
+        dispatch(createConfirmation(orderInfo));
+        navigate(`/chats/${ownerId}`)
 
     }
     useEffect(() => {
@@ -46,8 +45,9 @@ const FoodDetails = () => {
                 <div className='lg:w-1/3 flex flex-col justify-center lg:justify-start items-end  gap-5 py-10 lg:py-0 lg:px-10 lg:text-lg xl:text-xl lg:text-end'>
                     <span className='w-full flex flex-row-reverse justify-between items-center  gap-5 py-2'>
                         <h1 className='text-secondary text-xl lg:text-3xl xl:text-6xl'> {foodPost.title}</h1>
-                        <button className='bg-secondary text-white px-5 lg:py-1 xl:py-3 rounded-lg' onClick={handleOrder}>اطلب الآن</button>
-                    </span>
+                        {currentUser &&
+                            <button className='bg-secondary text-white px-5 lg:py-1 xl:py-3 rounded-lg' onClick={handleOrder}>اطلب الآن</button>
+                        }                    </span>
                     <span className='flex flex-row-reverse justify-start items-center gap-5 py-2'>
                         <span className='text-[#9e9d9d] '> {foodPost.owner.firstName} {foodPost.owner.lastName} </span>
                         <span className='flex flex-row-reverse justify-center items-center gap-3'><IoStar className='text-[#FFCD3C]' /><span> {foodPost.owner.rating}</span></span>

@@ -23,15 +23,15 @@ const ChatList = () => {
 
     useEffect(() => {
         dispatch(getChatroomsByUser(userId));
-    }, []);
+    }, [dispatch, userId]);
 
     return (
-        <div className='bg-white flex flex-col items-end justify-center'>
+        <div className='bg-white flex flex-col items-end justify-center w-full'>
             {
-                chatrooms.map((chatroom) => {
+                chatrooms.map((chatroom, index) => {
                     const chatroomId = chatroom._id;
                     const user = getUser(chatroom);
-                    return <div className='p-2 flex flex-row-reverse justify-center items-center gap-2 hover:bg-gray border-b-[1px] border-darkGray' onClick={() => handleChatClick(chatroomId)} >
+                    return <div key={index} className='w-full p-2 flex flex-row-reverse justify-start items-center gap-2 hover:bg-gray border-b-[1px] border-darkGray' onClick={() => handleChatClick(chatroomId)} >
                         <img src={user.image} alt='profile' className='w-[3rem] h-[3rem]  rounded-full' />
                         <span className='text-xl'>{user.firstName} {user.lastName}</span>
                     </div>

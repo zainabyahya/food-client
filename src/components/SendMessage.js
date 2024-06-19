@@ -25,7 +25,7 @@ const SendMessage = ({ chatroomId }) => {
     return (
         <form onSubmit={(e) => handleMessage(e)} className='w-full flex flex-row-reverse justify-center  items-center gap-2 bg-white p-2'>
             <input
-                className='bg-gray text-darkGray p-2 w-10/12 rounded-md'
+                className='bg-gray  p-2 w-10/12 rounded-md'
                 type='text'
                 placeholder='اكتب هنا'
                 value={text}

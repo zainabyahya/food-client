@@ -14,8 +14,9 @@ import AuthPage from "./pages/AuthPage";
 import Community from "./pages/Community";
 import Location from './components/Location';
 import HomePage from './pages/HomePage';
-import ChatPage from './pages/chatPage';
-
+import ChatPage from './pages/ChatPage';
+import Chat from './components/Chat';
+import ChatList from './components/ChatList';
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -35,7 +36,7 @@ function App() {
           < Route path="/community" element={<Community />} />
           < Route path={`/community/:postId`} element={< BlogPostPage />} />
           < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
-          < Route path={`/chat/:userId`} element={< ChatPage />} />
+          <Route path="/chats/*" element={<ChatPage />} />
 
         </Routes>
       </div>
