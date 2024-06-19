@@ -9,30 +9,50 @@ Modal.setAppElement('#root');
 
 const AddFood = ({ isOpen, onRequestClose }) => {
     const { userLocation, getUserLocation, error } = useUserLocation();
-    const [title, setTitle] = useState('');
-    const [notes, setNotes] = useState('');
-    const [time, setTime] = useState('');
-    const [image, setImage] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        notes: '',
+        time: '',
+        image: null
+    });
 
     const dispatch = useDispatch();
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            image: e.target.files[0]
+        }));
+    };
+
     const handlePost = (e) => {
         e.preventDefault();
-        const location = {
-            ...userLocation
-        }
-        console.log("🚀 ~ handlePost ~ location:", location)
 
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('notes', notes);
-        formData.append('time', time);
-        formData.append('image', image);
-        formData.append('location', JSON.stringify(userLocation));
-        formData.append('dateCreated', new Date());
-        dispatch(addFoodPost(formData));
-        console.log("🚀 ~ handlePost ~ formData:", formData)
+        const data = new FormData();
+        data.append('title', formData.title);
+        data.append('notes', formData.notes);
+        data.append('time', formData.time);
+        data.append('image', formData.image);
+        data.append('location', JSON.stringify(userLocation));
+        data.append('dateCreated', new Date());
 
+        dispatch(addFoodPost(data))
+            .then(() => {
+                setFormData({
+                    title: '',
+                    notes: '',
+                    time: '',
+                    image: null
+                });
+            });
         onRequestClose();
     };
 
@@ -54,31 +74,33 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         type='file'
                         accept='image/*'
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={handleFileChange}
                         required
                     />
                     <input
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         type='text'
                         placeholder='العنوان'
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        name='title'
+                        value={formData.title}
+                        onChange={handleChange}
                         required
                     />
                     <input
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         type='text'
                         placeholder='الملاحظات'
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
+                        name='notes'
+                        value={formData.notes}
+                        onChange={handleChange}
                         required
                     />
-
                     <input
                         className='w-full bg-gray py-2 px-2 rounded-md'
                         placeholder='الوقت'
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
+                        name='time'
+                        value={formData.time}
+                        onChange={handleChange}
                         required
                     />
                     <span className={`w-full bg-gray p-2 rounded-md text-center`} onClick={getUserLocation} value={userLocation}>

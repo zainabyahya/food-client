@@ -79,7 +79,7 @@ const foodSlice = createSlice({
             })
             .addCase(addFoodPost.fulfilled, (state, action) => {
                 state.loading = false;
-                state.foodPosts = [...state.foodPosts, action.payload];
+                state.foodPosts = [action.payload, ...state.foodPosts];
             })
             .addCase(addFoodPost.rejected, (state, action) => {
                 state.loading = false;
