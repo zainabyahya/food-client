@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-
 import FoodList from '../components/FoodList'
 
 const HomePage = () => {

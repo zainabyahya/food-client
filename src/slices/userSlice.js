@@ -2,7 +2,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import instance from "../utils/api";
 
-// Async thunks
 export const getAllUsers = createAsyncThunk('users/getAll', async () => {
     const response = await instance.get('/users');
     return response.data.allUsers;

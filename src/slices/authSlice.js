@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import instance from "../utils/api";
 import decodeJWT from "../utils/jwt";
 
@@ -6,6 +6,7 @@ const initialState = {
     isAuthenticated: false,
     currentToken: null,
     user: null,
+    location: null,
     loading: false,
     error: null,
 };
@@ -60,12 +61,39 @@ export const logout = createAsyncThunk(
     }
 );
 
+export const fetchUserProfile = createAsyncThunk(
+    "auth/fetchProfile",
+    async (_, { getState, rejectWithValue }) => {
+        try {
+            const { token } = getState().currentToken;
+            if (!token) {
+                throw new Error("No token available");
+            }
+            const decodedToken = checkForToken(token);
+            console.log("🚀 ~ decodedToken:", decodedToken)
+            return decodedToken;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase("auth/getUser", (state, action) => {
+                state.isAuthenticated = true;
+                state.currentToken = action.payload;
+            })
+            .addCase("auth/getLocation", (state, action) => {
+                state.isAuthenticated = true;
+                state.location = action.payload;
+            })
+
             .addCase(login.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -105,6 +133,17 @@ export const authSlice = createSlice({
                 state.user = null;
             })
             .addCase(logout.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            }).addCase(fetchUserProfile.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchUserProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentToken = action.payload;
+            })
+            .addCase(fetchUserProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

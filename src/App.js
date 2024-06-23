@@ -1,28 +1,35 @@
 import { useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from './slices/authSlice';
-import FoodCard from "./components/FoodCard";
+import { checkForToken } from './slices/authSlice';
 import FoodDetails from "./components/FoodDetails";
 import Footer from "./components/Footer";
-import PostCard from "./components/PostCard";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import BlogPostPage from "./pages/BlogPostPage";
 import Signup from "./components/Signup";
 import AuthPage from "./pages/AuthPage";
 import Community from "./pages/Community";
-import Location from './components/Location';
 import HomePage from './pages/HomePage';
 import ChatPage from './pages/ChatPage';
-import Chat from './components/Chat';
-import ChatList from './components/ChatList';
+import Profile from './components/Profile';
+import Bookmarks from './components/Bookmarks';
+
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+  const user = useSelector((state) => state.auth.currentToken);
+  console.log("🚀 ~ App ~ user:", user)
 
   useEffect(() => {
-  }, [])
+    const token = localStorage.getItem("token");
+    if (token) {
+      const token = localStorage.getItem("token");
+      const userInfo = checkForToken(token)
+      console.log("🚀 ~ useEffect ~ userInfo:", userInfo)
+      dispatch({ type: "auth/getUser", payload: userInfo })
+    }
+  }, [dispatch]);
+
 
   return (
     <div >
@@ -31,13 +38,14 @@ function App() {
         <Routes>
           < Route path="/auth" element={<AuthPage />} />
           < Route path="/" element={<HomePage />} />
+          < Route path="/bookmarks" element={<Bookmarks />} />
           < Route path="/login" element={<Login />} />
           < Route path="/signup" element={<Signup />} />
           < Route path="/community" element={<Community />} />
           < Route path={`/community/:postId`} element={< BlogPostPage />} />
           < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
           <Route path="/chats/*" element={<ChatPage />} />
-
+          <Route path="/profile/:userId" element={<Profile />} />
         </Routes>
       </div>
       <Footer />

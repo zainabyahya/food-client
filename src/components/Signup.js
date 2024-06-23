@@ -22,6 +22,7 @@ const Signup = () => {
                         phoneNumber: '',
                         password: '',
                         confirmPassword: '',
+                        image: null
                     }}
                     validationSchema={Yup.object({
                         firstName: Yup.string().required('الاسم الاول مطلوب'),
@@ -31,6 +32,13 @@ const Signup = () => {
                         confirmPassword: Yup.string()
                             .oneOf([Yup.ref('password'), null], "كلمتا السر غير متطابقتان")
                             .required('تأكيد كلمة السر مطلوب'),
+                        image: Yup.mixed().test('fileSize', 'The file is too large', (value) => {
+                            return value && value.size <= 1024 * 1024;
+                        })
+                            .test('fileFormat', 'Unsupported Format', (value) => {
+                                return value && ['image/jpeg', 'image/png', 'image/jpg'].includes(value.type);
+                            }),
+
                     })}
                     onSubmit={(values, { setSubmitting }) => {
                         console.log("Form values:", values);
@@ -39,6 +47,7 @@ const Signup = () => {
                         formData.append('lastName', values.lastName);
                         formData.append('phoneNumber', values.phoneNumber);
                         formData.append('password', values.password);
+                        formData.append('image', values.image);
 
                         dispatch(signup(formData))
                             .then(() => {
@@ -52,7 +61,7 @@ const Signup = () => {
                             });
                     }}
                 >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting, setFieldValue }) => (
                         <Form className="flex flex-col gap-5 lg:justify-center items-center p-5 pt-10 lg:w-2/3 xl:w-1/3 lg:m-auto absulote z-20">
                             <div className='flex flex-row-reverse justify-center items-center w-full gap-2'>
                                 <div className="flex flex-col w-1/2">
@@ -87,7 +96,7 @@ const Signup = () => {
                                     رقم الهاتف
                                 </label> */}
                                 <Field
-                                    className="drop-shadow-lg rounded-lg bg-white w-full p-3"
+                                    className="drop-shadow-lg rounded-lg bg-white w-full p-3 "
                                     id="phoneNumber"
                                     name="phoneNumber"
                                     type="text"
@@ -120,6 +129,21 @@ const Signup = () => {
                                     placeholder="اعد كتابة كلمة السر"
                                 />
                                 <ErrorMessage name="confirmPassword" component="div" className="text-red-500" />
+
+                            </div>
+                            <div className="flex flex-col w-full">
+                                <label htmlFor="image" className='drop-shadow-lg rounded-lg bg-white w-full p-3 cursor-pointer h-[2.5rem] text-center'>
+                                    <input
+                                        id="image"
+                                        name="image"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(event) => {
+                                            setFieldValue("image", event.currentTarget.files[0]);
+                                        }}
+                                    />
+
+                                    صورة شخصية</label>
                             </div>
                             <div className="bg-secondary text-white w-full rounded-lg p-2 mx-5">
                                 <button

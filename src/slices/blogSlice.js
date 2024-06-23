@@ -52,6 +52,19 @@ export const updateBlogPost = createAsyncThunk('blog/updateBlogPost', async ({ p
         throw error;
     }
 });
+export const fetchBlogPostsByAuthor = createAsyncThunk(
+    'blog/fetchBlogPostsByAuthor',
+    async (authorId) => {
+        try {
+            const response = await instance.get(`/blogs/author/${authorId}`);
+            console.log("🚀 ~ response.data:", response.data)
+
+            return response.data.foundBlogPosts;
+        } catch (error) {
+            throw error;
+        }
+    }
+);
 
 const blogSlice = createSlice({
     name: 'blog',
@@ -77,7 +90,7 @@ const blogSlice = createSlice({
             })
             .addCase(addBlogPost.fulfilled, (state, action) => {
                 state.loading = false;
-                state.singlePost = action.payload;
+                state.blogPosts = [action.payload, ...state.blogPosts];
             })
             .addCase(addBlogPost.rejected, (state, action) => {
                 state.loading = false;
@@ -121,7 +134,18 @@ const blogSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
-            ;
+            .addCase(fetchBlogPostsByAuthor.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchBlogPostsByAuthor.fulfilled, (state, action) => {
+                state.loading = false;
+                state.blogPosts = action.payload;
+            })
+            .addCase(fetchBlogPostsByAuthor.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            });
 
     },
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -6,12 +6,14 @@ import { addBlogPost } from '../slices/blogSlice';
 import Modal from 'react-modal';
 import { IoClose } from "react-icons/io5";
 import ReactQuill from 'react-quill';
+import { Oval } from 'react-loader-spinner';
 import 'react-quill/dist/quill.snow.css';
 
 Modal.setAppElement('#root');
 
 const AddPost = ({ isOpen, onRequestClose }) => {
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
 
     const initialValues = {
         title: '',
@@ -25,26 +27,35 @@ const AddPost = ({ isOpen, onRequestClose }) => {
         image: Yup.mixed()
     });
 
-    const handlePost = (values, { setSubmitting, resetForm }) => {
+    const handlePost = async (values, { setSubmitting, resetForm }) => {
+        setLoading(true);
+
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('content', values.content);
         if (values.image) {
             formData.append('image', values.image);
         }
-        console.log("🚀 ~ handlePost ~ formData:", formData)
 
-        dispatch(addBlogPost(formData)).then(() => {
+        try {
+            await dispatch(addBlogPost(formData));
             setSubmitting(false);
             resetForm();
+        } catch (error) {
+            console.error("Error adding post:", error);
+        } finally {
+            setLoading(false);
             onRequestClose();
-        });
+
+        }
     };
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={onRequestClose}
+            onRequestClose={() => {
+                if (!loading) onRequestClose();
+            }}
             contentLabel="اضافة منشور"
             className="modal"
             overlayClassName="overlay"
@@ -52,67 +63,85 @@ const AddPost = ({ isOpen, onRequestClose }) => {
             <div className='py-5 '>
                 <div className="flex flex-row-reverse justify-between items-center mb-3">
                     <h1 className='font-bold'>اضافة منشور</h1>
-                    <button onClick={onRequestClose}><IoClose className="text-2xl cursor-pointer" /></button>
+                    <button onClick={() => { if (!loading) onRequestClose(); }}><IoClose className="text-2xl cursor-pointer" /></button>
                 </div>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handlePost}
-                >
-                    {({ setFieldValue, values }) => (
-                        <Form className='w-full flex flex-col items-end gap-3'>
-                            <div className="w-full">
-                                <Field
-                                    className='bg-gray py-2 px-2 rounded-md w-full'
-                                    type='text'
-                                    name='title'
-                                    placeholder='العنوان'
-                                />
-                                <ErrorMessage name='title' component='div' className='text-red-500' />
-                            </div>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <Oval
+                            visible={true}
+                            height="80"
+                            width="80"
+                            color="#FF715B"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            secondaryColor="#1EA896"
+                        />
+                    </div>
+                ) : (
+                    <Formik
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handlePost}
+                    >
+                        {({ setFieldValue, values, isSubmitting }) => (
+                            <Form className='w-full flex flex-col items-end gap-3'>
+                                <div className="w-full">
+                                    <Field
+                                        className='bg-gray py-2 px-2 rounded-md w-full'
+                                        type='text'
+                                        name='title'
+                                        placeholder='العنوان'
+                                    />
+                                    <ErrorMessage name='title' component='div' className='text-red-500' />
+                                </div>
 
-                            <div className="w-full">
-                                <ReactQuill
-                                    value={values.content}
-                                    onChange={(value) => setFieldValue('content', value)}
-                                    className='bg-gray py-2 px-2 rounded-md w-full'
-                                    placeholder='المحتوى'
-                                    modules={{
-                                        toolbar: [
-                                            [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                                            [{ size: [] }],
-                                            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                            ['link', 'image'],
-                                            ['clean']
-                                        ],
-                                    }}
-                                    formats={[
-                                        'header', 'font', 'size',
-                                        'bold', 'italic', 'underline', 'strike', 'blockquote',
-                                        'list', 'bullet', 'indent',
-                                        'link', 'image', 'video'
-                                    ]}
-                                />
-                                <ErrorMessage name='content' component='div' className='text-red-500' />
-                            </div>
+                                <div className="w-full h-[20rem] bg-gray">
+                                    <ReactQuill
+                                        value={values.content}
+                                        onChange={(value) => setFieldValue('content', value)}
+                                        className='bg-gray py-2 px-2 rounded-md w-full h-[15rem]'
+                                        placeholder='المحتوى'
+                                        modules={{
+                                            toolbar: [
+                                                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                                [{ size: [] }],
+                                                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                ['link', 'image'],
+                                                ['clean']
+                                            ],
+                                        }}
+                                        formats={[
+                                            'header', 'font', 'size',
+                                            'bold', 'italic', 'underline', 'strike', 'blockquote',
+                                            'list', 'bullet', 'indent',
+                                            'link', 'image', 'video'
+                                        ]}
+                                    />
+                                    <ErrorMessage name='content' component='div' className='text-red-500' />
+                                </div>
 
-                            <div className="w-full">
-                                <input
-                                    className='bg-gray py-2 px-2 rounded-md w-full'
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={(e) => setFieldValue('image', e.target.files[0])}
-                                />
+                                <label className='w-full bg-gray py-2 px-2 rounded-md text-center cursor-pointer'>
+                                    <input
+                                        type='file'
+                                        accept='image/*'
+                                        className="hidden"
+                                        onChange={(event) => {
+                                            setFieldValue('image', event.currentTarget.files[0]);
+                                        }}
+                                    />
+                                    اضافة صورة
+                                </label>
                                 <ErrorMessage name='image' component='div' className='text-red-500' />
-                            </div>
 
-                            <button type='submit' className='bg-secondary text-white p-3 rounded-md m-auto'>
-                                اضافة منشور
-                            </button>
-                        </Form>
-                    )}
-                </Formik>
+                                <button type='submit' className='bg-secondary text-white p-3 rounded-md m-auto' disabled={isSubmitting || loading}>
+                                    {isSubmitting || loading ? 'جاري الإضافة...' : 'اضافة منشور'}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
+                )}
             </div>
         </Modal>
     );

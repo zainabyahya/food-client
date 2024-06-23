@@ -8,19 +8,21 @@ import SendMessage from '../components/SendMessage';
 
 const Chat = () => {
     const { chatroomId } = useParams();
-    console.log("🚀 ~ Chat ~ chatroomId:", chatroomId)
     const dispatch = useDispatch();
     const messages = useSelector((state) => state.message.messages);
-    console.log("🚀 ~ Chat ~ messages:", messages)
-    const currentUser = useSelector(selectUser);
-    // const { confirmation } = useSelector((state) => state.confirmation);
+    const currentUser = useSelector((state) => state.auth.currentToken);
+    const { confirmation } = useSelector((state) => state.confirmation);
 
     const isAuthor = (message) => {
         return message.user === currentUser.userId;
     }
+
+
     useEffect(() => {
         dispatch(getMessagesByChatroom(chatroomId));
-        // dispatch(getConfirmationByPostId(confirmation._id))
+        if (confirmation) {
+            dispatch(getConfirmationByPostId(confirmation._id))
+        }
     }, [dispatch, chatroomId]);
 
     return (
@@ -28,7 +30,6 @@ const Chat = () => {
             <div className="flex flex-col flex-grow overflow-auto mb-4 p-5">
                 {messages.map((message) => {
                     const author = isAuthor(message);
-                    console.log("🚀 ~ {messages.map ~ author:", author)
                     return author ? (
                         <span key={message._id} className='self-end bg-[#DCF1DE] rounded-l-md rounded-t-md py-1 px-3 mb-2'>
                             {message.text}

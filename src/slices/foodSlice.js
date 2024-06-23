@@ -44,10 +44,7 @@ export const getAllFoodPosts = createAsyncThunk('food/getAllFoodPosts', async (_
 
 export const getFoodPostById = createAsyncThunk('food/getFoodPostById', async (foodPostId, { rejectWithValue }) => {
     try {
-        console.log("---------hereeeeeeee-----------");
         const response = await instance.get(`/food/${foodPostId}`);
-        console.log("🚀 ~ getFoodPostById ~ response:", response)
-
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);

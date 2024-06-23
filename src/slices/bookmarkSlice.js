@@ -6,7 +6,7 @@ export const getAllBookmarks = createAsyncThunk(
     async (_, thunkAPI) => {
         try {
             const response = await instance.get('/bookmarks');
-            return response.data;
+            return response.data.allBookmarks;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
@@ -17,8 +17,9 @@ export const handleBookmark = createAsyncThunk(
     'bookmarks/handleBookmark',
     async (postId, thunkAPI) => {
         try {
+            console.log("i am here");
             const response = await instance.post(`/bookmarks`, { postId });
-            return response.data;
+            return response.data.allBookmarks;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
@@ -31,7 +32,7 @@ export const getBookmarksByUserId = createAsyncThunk(
     async (userId, thunkAPI) => {
         try {
             const response = await instance.get(`/bookmarks/${userId}`);
-            return response.data;
+            return response.data.userBookmarks.posts;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
@@ -41,6 +42,8 @@ export const getBookmarksByUserId = createAsyncThunk(
 
 const initialState = {
     bookmarks: [],
+    userBookmarks: [],
+    bookmark: {},
     loading: false,
     error: null,
 };
@@ -80,7 +83,7 @@ const bookmarkSlice = createSlice({
             })
             .addCase(getBookmarksByUserId.fulfilled, (state, action) => {
                 state.loading = false;
-                state.bookmarks = action.payload;
+                state.userBookmarks = action.payload;
             })
             .addCase(getBookmarksByUserId.rejected, (state, action) => {
                 state.loading = false;

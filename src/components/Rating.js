@@ -1,13 +1,7 @@
 import React from 'react'
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { updateConfirmation } from '../slices/confirmationSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../slices/authSlice';
 import StarRating from './StarRating';
 
 const Rating = ({ confirmation }) => {
-    const user = useSelector(selectUser);
-    const dispatch = useDispatch();
     const status = confirmation.status;
     const isConfirmed = status === "confirmed";
 
@@ -18,7 +12,8 @@ const Rating = ({ confirmation }) => {
                     قيم المستخدم
                 </span>
                 <StarRating />
-            </div>}
+            </div>
+            }
         </div>
     )
 }

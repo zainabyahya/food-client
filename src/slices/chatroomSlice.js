@@ -3,14 +3,14 @@ import instance from '../utils/api';
 
 const initialState = {
     chatrooms: [],
-    currentChatroom: null,
+    chatroom: null,
     loading: false,
     error: null,
 };
 
 // Action to get chatrooms by user ID
-export const getChatroomsByUser = createAsyncThunk(
-    'chatrooms/getChatroomsByUser',
+export const getChatroomByUser = createAsyncThunk(
+    'chatrooms/getChatroomByUser',
     async (userId, thunkAPI) => {
         try {
             const response = await instance.get(`/chatrooms/user/${userId}`);
@@ -38,9 +38,14 @@ export const getChatroomsById = createAsyncThunk(
 export const addChatroom = createAsyncThunk(
     'chatrooms/addChatroom',
     async (users, thunkAPI) => {
+        console.log("🚀 ~ users:", "6")
         try {
             const response = await instance.post('/chatrooms', { users });
-            return response.data.newChatroom;
+            console.log("🚀 ~ response.data.chatroom:", response.data.chatroom)
+            console.log("🚀 ~ users:", "7")
+
+
+            return response.data.chatroom;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
@@ -67,15 +72,15 @@ const chatroomSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // getChatroomsByUser
-            .addCase(getChatroomsByUser.pending, (state) => {
+            .addCase(getChatroomByUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(getChatroomsByUser.fulfilled, (state, action) => {
+            .addCase(getChatroomByUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.chatrooms = action.payload;
             })
-            .addCase(getChatroomsByUser.rejected, (state, action) => {
+            .addCase(getChatroomByUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
@@ -86,7 +91,7 @@ const chatroomSlice = createSlice({
             })
             .addCase(getChatroomsById.fulfilled, (state, action) => {
                 state.loading = false;
-                state.currentChatroom = action.payload;
+                state.chatroom = action.payload;
             })
             .addCase(getChatroomsById.rejected, (state, action) => {
                 state.loading = false;
@@ -98,7 +103,9 @@ const chatroomSlice = createSlice({
                 state.error = null;
             })
             .addCase(addChatroom.fulfilled, (state, action) => {
+                console.log("🚀 ~ .addCase ~ action.payload: 9", action.payload)
                 state.loading = false;
+                state.chatroom = action.payload;
                 state.chatrooms.push(action.payload);
             })
             .addCase(addChatroom.rejected, (state, action) => {

@@ -4,7 +4,7 @@ import { addFoodPost } from '../slices/foodSlice';
 import Modal from 'react-modal';
 import { IoClose } from "react-icons/io5";
 import useUserLocation from '../hooks/useUserLocation';
-
+import { Oval } from 'react-loader-spinner'
 Modal.setAppElement('#root');
 
 const AddFood = ({ isOpen, onRequestClose }) => {
@@ -15,9 +15,9 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         time: '',
         image: null
     });
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -33,8 +33,9 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         }));
     };
 
-    const handlePost = (e) => {
+    const handlePost = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const data = new FormData();
         data.append('title', formData.title);
@@ -44,17 +45,23 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         data.append('location', JSON.stringify(userLocation));
         data.append('dateCreated', new Date());
 
-        dispatch(addFoodPost(data))
-            .then(() => {
-                setFormData({
-                    title: '',
-                    notes: '',
-                    time: '',
-                    image: null
-                });
+
+        try {
+            await dispatch(addFoodPost(data));
+            setFormData({
+                title: '',
+                notes: '',
+                time: '',
+                image: null
             });
-        onRequestClose();
+            onRequestClose();
+        } catch (error) {
+            console.error("Error adding food post:", error);
+        } finally {
+            setLoading(false);  // Set loading to false after the operation is complete
+        }
     };
+
 
     return (
         <Modal
@@ -69,47 +76,70 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                     <h1 className='font-bold'>تبرع بالطعام</h1>
                     <button onClick={onRequestClose}><IoClose className="text-2xl cursor-pointer" /></button>
                 </div>
-                <form onSubmit={handlePost} className='w-full flex flex-col items-end gap-3'>
-                    <input
-                        className='w-full bg-gray py-2 px-2 rounded-md'
-                        type='file'
-                        accept='image/*'
-                        onChange={handleFileChange}
-                        required
-                    />
-                    <input
-                        className='w-full bg-gray py-2 px-2 rounded-md'
-                        type='text'
-                        placeholder='العنوان'
-                        name='title'
-                        value={formData.title}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        className='w-full bg-gray py-2 px-2 rounded-md'
-                        type='text'
-                        placeholder='الملاحظات'
-                        name='notes'
-                        value={formData.notes}
-                        onChange={handleChange}
-                        required
-                    />
-                    <input
-                        className='w-full bg-gray py-2 px-2 rounded-md'
-                        placeholder='الوقت'
-                        name='time'
-                        value={formData.time}
-                        onChange={handleChange}
-                        required
-                    />
-                    <span className={`w-full bg-gray p-2 rounded-md text-center`} onClick={getUserLocation} value={userLocation}>
-                        حدد موقعك
-                    </span>
-                    <button type='submit' className='bg-secondary text-white p-3 rounded-md w-full'>
-                        تبرع بالطعام
-                    </button>
-                </form>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <Oval
+                            visible={true}
+                            height="80"
+                            width="80"
+                            color="#FF715B"
+                            ariaLabel="oval-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            secondaryColor="#1EA896"
+                        />
+                    </div>
+                ) : (
+                    <form onSubmit={handlePost} className='w-full flex flex-col items-end gap-3'>
+                        <label
+                            className='w-full bg-gray py-2 px-2 rounded-md text-center cursor-pointer'
+                        >
+                            <input
+                                className='w-full bg-gray py-2 px-2 rounded-md '
+                                type='file'
+                                accept='image/*'
+                                onChange={handleFileChange}
+                                required
+                                class="custom-file-upload"
+
+                            />
+                            صورة الطبق
+                        </label>
+
+                        <input
+                            className='w-full bg-gray py-2 px-2 rounded-md'
+                            type='text'
+                            placeholder='العنوان'
+                            name='title'
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            className='w-full bg-gray py-2 px-2 rounded-md'
+                            type='text'
+                            placeholder='الملاحظات'
+                            name='notes'
+                            value={formData.notes}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            className='w-full bg-gray py-2 px-2 rounded-md'
+                            placeholder='الوقت'
+                            name='time'
+                            value={formData.time}
+                            onChange={handleChange}
+                            required
+                        />
+                        <span className={`w-full bg-gray p-2 rounded-md text-center`} onClick={getUserLocation} value={userLocation}>
+                            حدد موقعك
+                        </span>
+                        <button type='submit' className='bg-secondary text-white p-3 rounded-md w-full'>
+                            تبرع بالطعام
+                        </button>
+                    </form>
+                )}
             </div>
         </Modal>
     );
