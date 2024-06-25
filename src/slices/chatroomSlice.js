@@ -5,6 +5,7 @@ const initialState = {
     chatrooms: [],
     chatroom: null,
     loading: false,
+    isSuccess: false,
     error: null,
 };
 
@@ -38,13 +39,8 @@ export const getChatroomsById = createAsyncThunk(
 export const addChatroom = createAsyncThunk(
     'chatrooms/addChatroom',
     async (users, thunkAPI) => {
-        console.log("🚀 ~ users:", "6")
         try {
             const response = await instance.post('/chatrooms', { users });
-            console.log("🚀 ~ response.data.chatroom:", response.data.chatroom)
-            console.log("🚀 ~ users:", "7")
-
-
             return response.data.chatroom;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
@@ -103,7 +99,6 @@ const chatroomSlice = createSlice({
                 state.error = null;
             })
             .addCase(addChatroom.fulfilled, (state, action) => {
-                console.log("🚀 ~ .addCase ~ action.payload: 9", action.payload)
                 state.loading = false;
                 state.chatroom = action.payload;
                 state.chatrooms.push(action.payload);

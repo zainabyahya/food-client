@@ -5,10 +5,8 @@ import { fetchCommentsByPost } from "../slices/commentSlice"
 
 const CommentList = ({ post }) => {
     const postId = post._id;
-    console.log("🚀 ~ CommentList ~ postId:", postId)
     const dispatch = useDispatch();
     const commentsList = useSelector((state) => state.comment.comments);
-    console.log("🚀 ~ CommentList ~ commentsList:", commentsList)
     useEffect(() => {
         dispatch(fetchCommentsByPost(post._id));
     }, [dispatch, postId]);

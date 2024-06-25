@@ -2,41 +2,39 @@ import React, { useEffect } from 'react'
 import { IoClose, IoCheckmarkOutline } from "react-icons/io5";
 import { updateConfirmation } from '../slices/confirmationSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../slices/authSlice';
 
 
 const Confirmation = ({ confirmation }) => {
-    const user = useSelector(selectUser);
+    const user = useSelector((state) => state.auth.currentToken);
     const dispatch = useDispatch();
-    const status = confirmation.status;
-    const isPending = status === "pending" || "partiallyConfirmed";
+    let status, isPending;
+    if (confirmation) {
+        status = confirmation.status;
+        isPending = (status === "pending") || (status === "partiallyConfirmed");
+    }
     const handleConfirm = () => {
         if (user.userId === confirmation.user) {
-            dispatch(updateConfirmation({ "confirmByUser": true }))
+            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByUser": true }))
         } else if (user.userId === confirmation.owner) {
-            dispatch(updateConfirmation({ "confirmByOwner": true }))
+            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByOwner": true }))
         }
     }
     const handleReject = () => {
         if (user.userId === confirmation.user) {
-            dispatch(updateConfirmation({ "confirmByUser": false }))
+            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByUser": false }))
         } else if (user.userId === confirmation.owner) {
-            dispatch(updateConfirmation({ "confirmByOwner": false }))
+            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByOwner": false }))
         }
     }
-
-    useEffect(() => {
-    }, [status])
-
     return (
-        <div>
+        <div className='w-1/4 self-center m-3 p-5 text-xl'>
             {
                 isPending &&
-                <div className='flex flex-row-reverse justify-between items-center gap-2 text-white bg-secondary'>
+                <div className='p-2 flex flex-row-reverse justify-between items-center gap-2 text-white bg-secondary rounded-md'>
                     <span>تم الإتفاق</span>
-                    <div>
-                        <IoCheckmarkOutline onClick={handleConfirm} />
-                        <IoClose onClick={handleReject} />
+                    <div className='flex gap-2'>
+                        <IoCheckmarkOutline onClick={handleConfirm} className='cursor-pointer' />
+                        <IoClose onClick={handleReject} className='cursor-pointer' />
                     </div>
                 </div>
             }

@@ -33,9 +33,9 @@ const Navbar = ({ user }) => {
             <div className={`bg-primary text-white flex-col items-center border-b-[1px] md:hidden -z-10 ${!dropdown ? "hidden" : "flex"}`} id="navbar-hamburger">
                 {
                     [
-                        ['6', 'تبرع بالطعام', '/donate'],
                         ['1', 'المجتمع', '/community'],
                         ['2', 'الرسائل', '/chats'],
+                        ['6', 'تبرع بالطعام', '/donate'],
                         ['5', 'صفحتي', `/profile/${user?.userId}`],
                         ['3', ' المفضلة', '/bookmarks'],
                         ['7', 'تسجيل الخروج', '/logout'],
@@ -63,19 +63,19 @@ const Navbar = ({ user }) => {
 
             </div>
             <div className='hidden md:block w-full l bg-primary'>
-                <div className='m-auto w-3/5 flex h-[5rem] text-xl text-white flex-row-reverse justify-between items-end '>
+                <div className='m-auto w-3/5 flex h-[5rem] text-xl text-white flex-row-reverse justify-center items-end gap-10'>
                     {
                         [
-                            ['6', 'تبرع بالطعام', '/donate'],
                             ['2', 'الرسائل', '/chats'],
                             ['3', ' المفضلة', '/bookmarks'],
+                            ['6', 'تبرع بالطعام', '/donate'],
                             ['4', 'بالعافية', '/'],
-                            ['5', 'صفحتي', `/profile/${user?.userId}`],
                             ['1', 'المجتمع', '/community'],
+                            ['5', 'صفحتي', `/profile/${user?.userId}`],
                             ['7', 'تسجيل الخروج', '/logout'],
                         ].map(([id, title, url]) => {
                             if (id === "4") {
-                                return <span key={id} className='font-[vibes] p-5 text-4xl lg:text-5xl cursor-pointer' onClick={() => { navigate(url) }}>بالعافية</span>
+                                return <span key={id} className='font-[vibes] p-5 text-4xl lg:text-5xl cursor-pointer w-fit' onClick={() => { navigate(url) }}>بالعافية</span>
                             }
                             if (!user) {
                                 if (id === "2" || id === "5" || id === "3" || id === "7") {
@@ -84,16 +84,13 @@ const Navbar = ({ user }) => {
                                 else if (id === "6") {
                                     return <span key={id} onClick={() => { navigate("/auth") }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
                                 } else {
-                                    return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
-
+                                    return <span key={id} onClick={() => { navigate(url) }} className=" p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
                                 }
-
                             } else {
                                 if (id === "6") {
-                                    return <span key={id} onClick={handleOpenModal} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
+                                    return <span key={id} onClick={handleOpenModal} className=" p-5 hover:underline text-xl cursor-pointer ">{title}</span>
                                 } else if (id === "7") {
                                     return <span key={id} onClick={logoutHandler} className="p-5 hover:underline text-xl cursor-pointer ">{title}</span>
-
                                 }
                                 else {
                                     return <span key={id} onClick={() => { navigate(url) }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>

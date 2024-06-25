@@ -8,14 +8,11 @@ const ChatList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const chatrooms = useSelector((state) => state.chatroom.chatrooms)
-    console.log("🚀 ~ ChatList ~ chatrooms:", chatrooms)
     const currentUser = useSelector((state) => state.auth.currentToken);
-    console.log("🚀 ~ ChatList ~ currentUser:", currentUser)
     const userId = currentUser.userId;
 
     const getUser = (chatroom) => {
         const users = chatroom.users;
-        console.log("🚀 ~ getUser ~ users:", users)
         const user = users.find((user) =>
             user.toString() !== userId.toString()
         )

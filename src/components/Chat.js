@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUser } from '../slices/authSlice'
 import { getMessagesByChatroom } from '../slices/messageSlice'
 import { getConfirmationByPostId } from '../slices/confirmationSlice';
 import { useParams } from 'react-router-dom';
 import SendMessage from '../components/SendMessage';
+import Confirmation from './Confirmation';
 
 const Chat = () => {
     const { chatroomId } = useParams();
@@ -12,6 +12,9 @@ const Chat = () => {
     const messages = useSelector((state) => state.message.messages);
     const currentUser = useSelector((state) => state.auth.currentToken);
     const { confirmation } = useSelector((state) => state.confirmation);
+    console.log("🚀 ~ Chat ~ confirmation:", confirmation)
+    const chatContainerRef = useRef(null);
+
 
     const isAuthor = (message) => {
         return message.user === currentUser.userId;
@@ -25,9 +28,16 @@ const Chat = () => {
         }
     }, [dispatch, chatroomId]);
 
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     return (
-        <div className="flex flex-col min-h-[70vh] bg-gray ">
-            <div className="flex flex-col flex-grow overflow-auto mb-4 p-5">
+        <div className="flex flex-col h-[70vh] bg-gray ">
+            {/* {confirmation && <Confirmation confirmation={confirmation} />} */}
+            <div ref={chatContainerRef} className="flex flex-col flex-grow overflow-auto mb-4 p-5">
                 {messages.map((message) => {
                     const author = isAuthor(message);
                     return author ? (

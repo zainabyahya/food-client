@@ -14,20 +14,21 @@ import HomePage from './pages/HomePage';
 import ChatPage from './pages/ChatPage';
 import Profile from './components/Profile';
 import Bookmarks from './components/Bookmarks';
+import { loadInitialLocation } from './slices/authSlice';
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.currentToken);
-  console.log("🚀 ~ App ~ user:", user)
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const token = localStorage.getItem("token");
       const userInfo = checkForToken(token)
-      console.log("🚀 ~ useEffect ~ userInfo:", userInfo)
       dispatch({ type: "auth/getUser", payload: userInfo })
     }
+    dispatch(loadInitialLocation());
   }, [dispatch]);
 
 

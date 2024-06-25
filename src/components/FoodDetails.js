@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { IoLocationOutline, IoTimeOutline, IoStar } from "react-icons/io5";
 import { BsArrowRight } from "react-icons/bs";
 import { getFoodPostById } from '../slices/foodSlice';
-import { selectUser } from '../slices/authSlice';
 import { createConfirmation } from '../slices/confirmationSlice';
 import { addChatroom } from '../slices/chatroomSlice';
-import { APIProvider, Map, MapCameraChangedEvent } from '@vis.gl/react-google-maps';
 import getAverageRating from '../utils/rating';
+import GoogleMapReact from 'google-map-react';
+import { getDistance } from '../utils/getDistance';
 
 const FoodDetails = () => {
     const dispatch = useDispatch();
@@ -17,8 +17,12 @@ const FoodDetails = () => {
     const { foodPost, loading, error } = useSelector((state) => state.food);
     const currentChatroom = useSelector((state) => state.chatroom.chatroom);
     const chatroomLoading = useSelector((state) => state.chatroom.loading);
+    const confirmation = useSelector((state) => state.confirmation.confirmation);
 
-    const currentUser = useSelector(selectUser);
+    const currentUser = useSelector((state) => state.auth.currentToken);
+    const userLocation = useSelector((state) => state.auth.location)
+    console.log("🚀 ~ FoodDetails ~ userLocation:", userLocation)
+
     let isOwner = false;
     let showOrder = false;
 
@@ -33,21 +37,37 @@ const FoodDetails = () => {
         showOrder = currentUser && !isOwner;
     }
 
-    useEffect(() => {
-        if (currentChatroom) {
 
+    useEffect(() => {
+        // navigate to chat when اطلب الان is pressed
+        if (currentChatroom) {
             const chatroomId = currentChatroom._id;
-            // const orderInfo = {
-            //     user: currentUser._id,
-            //     owner: ownerId,
-            //     post: foodPostId,
-            // }
-            // dispatch(createConfirmation(orderInfo));
-            navigate(`/chats/${chatroomId}`)
+            const orderInfo = {
+                owner: foodPost.owner._id,
+                post: foodPostId,
+            }
+            dispatch(createConfirmation(orderInfo)).then((confirmation) => {
+                navigate(`/chats/${chatroomId}`, { state: { confirmation } })
+            });
 
         }
+    }, [currentChatroom])
+
+    useEffect(() => {
         dispatch(getFoodPostById(foodPostId));
-    }, [dispatch, currentChatroom]);
+
+    }, [dispatch]);
+
+    const renderMarkers = (map, maps) => {
+        new maps.Marker({
+            position: {
+                lat: foodPost.location.latitude,
+                lng: foodPost.location.longitude
+            },
+            map,
+            title: 'Food Location'
+        });
+    };
 
     if (loading) return <p>Loading...</p>;
     if (chatroomLoading) return <p>Loading...</p>;
@@ -75,18 +95,29 @@ const FoodDetails = () => {
                         <span > {foodPost.notes}</span>
 
                     </span>
-                    <span className='flex flex-row-reverse justify-center items-center gap-3'><IoLocationOutline className='text-primary' /> {foodPost.location.longitude}</span>
+                    <span className='flex flex-row-reverse justify-center items-center gap-3'>
+                        <IoLocationOutline className='text-primary' />
+                        {userLocation === null
+                            ? 'حدد موقعك لحساب المسافة'
+                            : `${getDistance(userLocation, foodPost.location)} km`}
+                    </span>
                     <span className='flex flex-row-reverse justify-center items-center lg:items-start gap-3'><IoTimeOutline className='text-primary' /> {foodPost.time}</span>
                 </div>
                 <div className='lg:w-1/3 h-full'>
-                    <APIProvider apiKey={`${process.env.REACT_APP_GOOGLE_API_KEY}`} onLoad={() => console.log('Maps API has loaded.')}>
-                        <Map
+                    <div style={{ height: '65vh', width: '100%' }}>
+                        <GoogleMapReact
+                            bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_API_KEY }}
+                            defaultCenter={
+                                {
+                                    lat: foodPost.location.latitude,
+                                    lng: foodPost.location.longitude
+                                }
+                            }
                             defaultZoom={15}
-                            defaultCenter={{ lat: foodPost.location.latitude, lng: foodPost.location.longitude }}
-                        >
-                        </Map>
-
-                    </APIProvider>
+                            onGoogleApiLoaded={({ map, maps }) => renderMarkers(map, maps)}
+                            yesIWantToUseGoogleMapApiInternals                        >
+                        </GoogleMapReact>
+                    </div>
                 </div>
             </div>
             }

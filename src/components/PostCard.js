@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import image from '../assets/1.jpeg';
-import { FaRegCommentAlt, FaBookmark, FaRegBookmark } from "react-icons/fa";
+// import { FaRegCommentAlt, FaBookmark, FaRegBookmark } from "react-icons/fa";
 import FormattedContent from './FormattedContent'; // 
 import { useNavigate } from 'react-router-dom';
 
 const PostCard = ({ post, showImage, showUser }) => {
-    console.log("🚀 ~ PostCard ~ post:", post)
     const navigate = useNavigate();
 
     const handlePostClick = () => {
         navigate(`/community/${post._id}`);
     };
     return (
-        <div className={`bg-gray ${showImage ? "w-full" : "w-[23rem]"}`}>
+        <div className={`bg-gray ${showImage ? "w-full" : "w-[22srem]"}`}>
             {post.author &&
                 <div className='p-5 flex flex-col justify-center items-end gap-10 rounded-md' >
                     {showUser && <div className='flex flex-row-reverse justify-center items-center gap-2'>
@@ -26,10 +25,7 @@ const PostCard = ({ post, showImage, showUser }) => {
                         <FormattedContent className='text-end' content={post.content} />
                         <span className='py-5 text-secondary hover:underline text-end' onClick={handlePostClick} > ..رؤية المزيد</span>
                     </div>
-                    <div className='self-start flex justify-center items-center gap-2 text-secondary'>
-                        <FaRegBookmark className='cursor-pointer' />
-                        <FaRegCommentAlt className='cursor-pointer' />
-                    </div>
+
                 </div>
             }
         </div>

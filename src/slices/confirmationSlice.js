@@ -4,8 +4,12 @@ import instance from "../utils/api";
 export const createConfirmation = createAsyncThunk(
     'confirmation/createConfirmation',
     async (confirmationData, thunkAPI) => {
+        console.log("🚀 ~ confirmationData:", confirmationData)
         try {
+            console.log("i am here------------------------");
             const response = await instance.post('/confirmation', confirmationData);
+            console.log("🚀 ~ response.data.newConfirmation:", response.data.newConfirmation)
+
             return response.data.newConfirmation;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
@@ -16,6 +20,7 @@ export const createConfirmation = createAsyncThunk(
 export const updateConfirmation = createAsyncThunk(
     'confirmation/updateConfirmation',
     async ({ confirmationId, updates }, thunkAPI) => {
+        console.log("🚀 ~ confirmationId:", confirmationId)
         try {
             const response = await instance.put(`/confirmation/${confirmationId}`, updates);
             return response.data.confirmation;

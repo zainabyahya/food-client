@@ -6,10 +6,9 @@ module.exports = {
       fontFamily: {
         'vibes': ["'Vibes"],
       },
-
       backgroundImage: {
-        'map': "url('./src/assets/map.jpeg')",
-      }
+        'map': "url('/src/assets/map.jpg')",
+      },
     },
     colors: {
       'primary': '#1EA896',
@@ -17,6 +16,7 @@ module.exports = {
       gray: "#F7F7F7",
       darkGray: "#D7D7D7",
       white: "#FFF",
+      lightWhite: "rgba(255,255,255, 0.3)",
     },
   },
   plugins: [],

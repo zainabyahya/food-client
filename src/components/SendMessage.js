@@ -6,7 +6,7 @@ import { selectUser } from '../slices/authSlice';
 const SendMessage = ({ chatroomId }) => {
     const [text, setText] = useState('');
     const dispatch = useDispatch();
-    const currentToken = useSelector(selectUser)
+    const currentToken = useSelector((state) => state.auth.currentToken)
 
     const handleMessage = (e) => {
         e.preventDefault();

@@ -50,3 +50,35 @@ textarea,
 input[type="file"] {
   display: none;
 }
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 10px;
+  margin: 10px;
+}
+
+.pagination li {
+  margin: 10px 5px;
+  border-radius: 0.5rem;
+}
+
+.pagination li a {
+  padding: 8px 16px;
+  color: #1EA896;
+  cursor: pointer;
+  border-radius: 0.5rem;
+
+}
+
+.pagination li a:hover {
+  background-color: #f7f7f7;
+  color: #1EA896;
+}
+
+.pagination .active a {
+  border-radius: 0.5rem;
+  background-color: #1EA896;
+  color: #f7f7f7;
+  border: 1px solid #1EA896;
+}

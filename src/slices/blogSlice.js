@@ -36,6 +36,7 @@ export const addBlogPost = createAsyncThunk('blog/addBlogPost', async (formData)
 });
 
 export const deleteBlogPost = createAsyncThunk('blog/deleteBlogPost', async (postId) => {
+    console.log("🚀 ~ deleteBlogPost ~ postId:", postId)
     try {
         await instance.delete(`/blogs/${postId}`);
         return postId;
@@ -57,7 +58,7 @@ export const fetchBlogPostsByAuthor = createAsyncThunk(
     async (authorId) => {
         try {
             const response = await instance.get(`/blogs/author/${authorId}`);
-            console.log("🚀 ~ response.data:", response.data)
+            console.log("🚀 ~ response.data:", response.data.foundBlogPosts)
 
             return response.data.foundBlogPosts;
         } catch (error) {

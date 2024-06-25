@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import instance from "../utils/api";
 import decodeJWT from "../utils/jwt";
+const savedLocation = JSON.parse(localStorage.getItem('location'));
 
 const initialState = {
     isAuthenticated: false,
     currentToken: null,
     user: null,
-    location: null,
+    location: savedLocation || null,
     loading: false,
     error: null,
 };
@@ -54,6 +55,7 @@ export const logout = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             localStorage.removeItem('token');
+            localStorage.removeItem('location');
             return null;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -61,23 +63,15 @@ export const logout = createAsyncThunk(
     }
 );
 
-export const fetchUserProfile = createAsyncThunk(
-    "auth/fetchProfile",
-    async (_, { getState, rejectWithValue }) => {
-        try {
-            const { token } = getState().currentToken;
-            if (!token) {
-                throw new Error("No token available");
-            }
-            const decodedToken = checkForToken(token);
-            console.log("🚀 ~ decodedToken:", decodedToken)
-            return decodedToken;
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
-    }
-);
+export const setLocation = createAsyncThunk('auth/setLocation', async (location) => {
+    localStorage.setItem('location', JSON.stringify(location));
+    return location;
+});
 
+export const loadInitialLocation = createAsyncThunk('auth/loadInitialLocation', async () => {
+    const location = JSON.parse(localStorage.getItem('location'));
+    return location;
+});
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -93,7 +87,6 @@ export const authSlice = createSlice({
                 state.isAuthenticated = true;
                 state.location = action.payload;
             })
-
             .addCase(login.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -130,22 +123,21 @@ export const authSlice = createSlice({
                 state.loading = false;
                 state.isAuthenticated = false;
                 state.currentToken = null;
+                state.location = null;
                 state.user = null;
             })
             .addCase(logout.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            }).addCase(fetchUserProfile.pending, (state) => {
-                state.loading = true;
-                state.error = null;
             })
-            .addCase(fetchUserProfile.fulfilled, (state, action) => {
-                state.loading = false;
-                state.currentToken = action.payload;
+            .addCase(setLocation.fulfilled, (state, action) => {
+                state.isAuthenticated = true;
+                state.location = action.payload;
             })
-            .addCase(fetchUserProfile.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
+            .addCase(setLocation.rejected, (state, action) => {
+                state.isAuthenticated = false;
+                state.location = null;
+                console.error(action.error.message);
             });
     },
 });
