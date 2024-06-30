@@ -11,7 +11,7 @@ const Community = () => {
     const { blogPosts, loading, error } = useSelector((state) => state.blog);
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 8;
-
+    const currentUser = useSelector((state) => state.auth.currentToken)
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
@@ -35,18 +35,18 @@ const Community = () => {
 
 
 
-    if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
 
     return (
         <div className='w-3/5 m-auto flex flex-col items-center justify-center gap-5 p-5'>
-            <div className=' self-end'>
-                <button onClick={handleOpenModal} className="bg-secondary text-white p-3 rounded-md">
-                    + إضافة منشور
-                </button>
-                <AddPost isOpen={isModalOpen} onRequestClose={handleCloseModal} />
-            </div>
+            {currentUser &&
+                <div className=' self-end'>
+                    <button onClick={handleOpenModal} className="bg-secondary text-white p-3 rounded-md">
+                        + إضافة منشور
+                    </button>
+                    <AddPost isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+                </div>}
             <div className='w-full flex flex-col items-end justify-center gap-5'>
                 {
                     currentItems.map((blogPost, index) => {

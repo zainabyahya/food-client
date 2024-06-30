@@ -2,10 +2,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import instance from "../utils/api";
 
-export const getAllUsers = createAsyncThunk('users/getAll', async () => {
-    const response = await instance.get('/users');
-    return response.data.allUsers;
-});
 
 export const getUserById = createAsyncThunk('users/getById', async (userId) => {
     const response = await instance.get(`/users/${userId}`);
@@ -19,12 +15,13 @@ export const deleteUser = createAsyncThunk('users/delete', async (userId) => {
 
 export const updateUser = createAsyncThunk(
     'users/update',
-    async ({ userId, userData }) => {
-        const response = await instance.put(`/users/${userId}`, userData, {
+    async (user) => {
+        const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-        });
+        };
+        const response = await instance.put(`/users/${user._id}`, user, config);
         return response.data.updatedUser;
     }
 );
@@ -32,8 +29,11 @@ export const updateUser = createAsyncThunk(
 
 export const updateUserRating = createAsyncThunk(
     'users/updateUserRating',
-    async ({ userId, rating }) => {
-        const response = await instance.put(`/rating/${userId}`, { rating });
+    async (user) => {
+        console.log("🚀 ~ user:", user)
+        const response = await instance.put(`/users/rating/${user.id}`, user);
+        console.log("🚀 ~ esponse.data.updatedUser:", response.data.updatedUser)
+
         return response.data.updatedUser;
     }
 );
@@ -49,17 +49,6 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getAllUsers.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(getAllUsers.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.users = action.payload;
-            })
-            .addCase(getAllUsers.rejected, (state, action) => {
-                state.status = 'failed';
-                state.error = action.error.message;
-            })
             .addCase(getUserById.pending, (state) => {
                 state.status = 'loading';
             })
@@ -75,22 +64,10 @@ const userSlice = createSlice({
                 state.users = state.users.filter((user) => user._id !== action.payload);
             })
             .addCase(updateUser.fulfilled, (state, action) => {
-                const index = state.users.findIndex((user) => user._id === action.payload._id);
-                if (index !== -1) {
-                    state.users[index] = action.payload;
-                }
-                if (state.user && state.user._id === action.payload._id) {
-                    state.user = action.payload;
-                }
+                state.user = action.payload;
             })
             .addCase(updateUserRating.fulfilled, (state, action) => {
-                const index = state.users.findIndex((user) => user._id === action.payload._id);
-                if (index !== -1) {
-                    state.users[index] = action.payload;
-                }
-                if (state.user && state.user._id === action.payload._id) {
-                    state.user = action.payload;
-                }
+                state.user = action.payload;
             });
     },
 });

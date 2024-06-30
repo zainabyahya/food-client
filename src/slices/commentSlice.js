@@ -36,9 +36,9 @@ export const deleteComment = createAsyncThunk('comments/deleteComment', async (c
     }
 });
 
-export const updateComment = createAsyncThunk('comments/updateComment', async ({ commentId, commentData }, { rejectWithValue }) => {
+export const updateComment = createAsyncThunk('comments/updateComment', async (data, { rejectWithValue }) => {
     try {
-        const response = await instance.put(`/comments/${commentId}`, commentData);
+        const response = await instance.put(`/comments/${data._id}`, data);
         return response.data.updatedComment;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -102,9 +102,10 @@ const commentSlice = createSlice({
             })
             .addCase(updateComment.fulfilled, (state, action) => {
                 state.loading = false;
-                state.comments = state.comments.map(comment =>
-                    comment._id === action.payload._id ? action.payload : comment
-                );
+                const index = state.comments.findIndex(comment => comment._id === action.payload._id);
+                if (index !== -1) {
+                    state.comments[index] = action.payload;
+                }
             })
             .addCase(updateComment.rejected, (state, action) => {
                 state.loading = false;

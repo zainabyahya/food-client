@@ -6,31 +6,38 @@ import { IoPencil, IoTrash } from "react-icons/io5";
 import FormattedContent from './FormattedContent';
 import { handleBookmark, getBookmarksByUserId } from "../slices/bookmarkSlice";
 import { deleteBlogPost } from '../slices/blogSlice';
+import EditPost from './EditPost';
 
 const PostDetails = ({ post }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const currentUser = useSelector((state) => state.auth.currentToken);
-    const userId = currentUser.userId;
+    const userId = currentUser?.userId;
     const { postId } = useParams();
     const [saved, setSaved] = useState(false);
     let bookmarks = useSelector((state) => state.bookmark.userBookmarks);
 
-
     const author = post.author;
-    const handleEdit = () => {
-        navigate(`/edit/${post._id}`);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
     };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     const handleDelete = () => {
         dispatch(deleteBlogPost(postId));
         navigate("/community");
     };
+
     const handleBookmarkBtn = () => {
         const newBookmark = {
             postId: postId
         }
         setSaved(!saved);
-
         dispatch(handleBookmark(newBookmark));
     }
 
@@ -70,18 +77,18 @@ const PostDetails = ({ post }) => {
                         }
                         <div className='flex flex-row-reverse gap-2'>
                             {isAuthor && (
-                                <div className='flex gap-2'>
-                                    <button onClick={handleEdit} className='text-secondary'>
-                                        <IoPencil />
+                                <div className='flex gap-2 '>
+                                    <button onClick={handleOpenModal} className='text-secondary'>
+                                        <IoPencil size={"1.5rem"} />
                                     </button>
                                     <button onClick={handleDelete} className='text-secondary'>
-                                        <IoTrash />
+                                        <IoTrash size={"1.5rem"} />
                                     </button>
                                 </div>
                             )} {
                                 currentUser && <button onClick={handleBookmarkBtn} className='text-secondary'>
-                                    {saved ? <FaBookmark />
-                                        : <FaRegBookmark />
+                                    {saved ? <FaBookmark size={"1.5rem"} />
+                                        : <FaRegBookmark size={"1.5rem"} />
                                     }
                                 </button>
                             }
@@ -97,6 +104,8 @@ const PostDetails = ({ post }) => {
                     </div>
                 </div>
             }
+            <EditPost isOpen={isModalOpen} onRequestClose={handleCloseModal} post={post} />
+
         </div>
     )
 }

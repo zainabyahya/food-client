@@ -19,10 +19,11 @@ export const createConfirmation = createAsyncThunk(
 
 export const updateConfirmation = createAsyncThunk(
     'confirmation/updateConfirmation',
-    async ({ confirmationId, updates }, thunkAPI) => {
-        console.log("🚀 ~ confirmationId:", confirmationId)
+    async (confirmationData, thunkAPI) => {
+        console.log("🚀 ~ confirmationData:", confirmationData)
+
         try {
-            const response = await instance.put(`/confirmation/${confirmationId}`, updates);
+            const response = await instance.put(`/confirmation/${confirmationData.confirmationId}`, confirmationData);
             return response.data.confirmation;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
@@ -56,9 +57,10 @@ export const getConfirmationByPostId = createAsyncThunk(
 
 export const getConfirmationByUsersIds = createAsyncThunk(
     'confirmation/getConfirmationByUsersIds',
-    async ({ userId, ownerId }, thunkAPI) => {
+    async (users, thunkAPI) => {
+        console.log("🚀 ~ users:", users)
         try {
-            const response = await instance.get(`/confirmation/users/${userId}/${ownerId}`);
+            const response = await instance.get(`/confirmation/users`, users);
             return response.data.confirmation;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);

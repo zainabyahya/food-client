@@ -15,6 +15,8 @@ import ChatPage from './pages/ChatPage';
 import Profile from './components/Profile';
 import Bookmarks from './components/Bookmarks';
 import { loadInitialLocation } from './slices/authSlice';
+import EditPost from './components/EditPost';
+import NotFound from './components/NotFound';
 
 function App() {
   const dispatch = useDispatch();
@@ -37,16 +39,24 @@ function App() {
       <Navbar user={user} />
       <div className='min-h-[70vh]'>
         <Routes>
-          < Route path="/auth" element={<AuthPage />} />
-          < Route path="/" element={<HomePage />} />
-          < Route path="/bookmarks" element={<Bookmarks />} />
-          < Route path="/login" element={<Login />} />
-          < Route path="/signup" element={<Signup />} />
-          < Route path="/community" element={<Community />} />
-          < Route path={`/community/:postId`} element={< BlogPostPage />} />
-          < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
-          <Route path="/chats/*" element={<ChatPage />} />
-          <Route path="/profile/:userId" element={<Profile />} />
+          {user ? (<>
+            < Route path="/" element={<HomePage />} />
+            < Route path="/bookmarks" element={<Bookmarks />} />
+            < Route path="/community" element={<Community />} />
+            < Route path={`/community/:postId`} element={< BlogPostPage />} />
+            <Route path="/chats/*" element={<ChatPage />} />
+            <Route path="/profile/:userId" element={<Profile />} />
+            < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
+          </>) : (<>
+            < Route path={`/community/:postId`} element={< BlogPostPage />} />
+            < Route path={`/food/:foodPostId`} element={< FoodDetails />} />
+            < Route path="/community" element={<Community />} />
+            < Route path="/auth" element={<AuthPage />} />
+            < Route path="/" element={<HomePage />} />
+            < Route path="/login" element={<Login />} />
+            < Route path="/signup" element={<Signup />} />
+          </>)}
+          <Route component={NotFound} />
         </Routes>
       </div>
       <Footer />

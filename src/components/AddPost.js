@@ -39,14 +39,12 @@ const AddPost = ({ isOpen, onRequestClose }) => {
 
         try {
             await dispatch(addBlogPost(formData));
-            setSubmitting(false);
             resetForm();
+            onRequestClose();
         } catch (error) {
             console.error("Error adding post:", error);
         } finally {
             setLoading(false);
-            onRequestClose();
-
         }
     };
 
@@ -60,10 +58,12 @@ const AddPost = ({ isOpen, onRequestClose }) => {
             className="modal"
             overlayClassName="overlay"
         >
-            <div className='py-5 '>
+            <div className='py-5'>
                 <div className="flex flex-row-reverse justify-between items-center mb-3">
                     <h1 className='font-bold'>اضافة منشور</h1>
-                    <button onClick={() => { if (!loading) onRequestClose(); }}><IoClose className="text-2xl cursor-pointer" /></button>
+                    <button onClick={() => { if (!loading) onRequestClose(); }}>
+                        <IoClose className="text-2xl cursor-pointer" />
+                    </button>
                 </div>
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
@@ -136,7 +136,7 @@ const AddPost = ({ isOpen, onRequestClose }) => {
                                 <ErrorMessage name='image' component='div' className='text-red-500' />
 
                                 <button type='submit' className='bg-secondary text-white p-3 rounded-md m-auto' disabled={isSubmitting || loading}>
-                                    {isSubmitting || loading ? 'جاري الإضافة...' : 'اضافة منشور'}
+                                    {loading ? 'جاري الإضافة...' : 'اضافة منشور'}
                                 </button>
                             </Form>
                         )}

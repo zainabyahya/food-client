@@ -3,17 +3,15 @@ import { FaStar } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { updateUserRating } from '../slices/userSlice';
 
-const StarRating = ({ onRatingSelect }) => {
+const StarRating = ({ otherUserId }) => {
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
     const dispatch = useDispatch();
     const handleClick = (value) => {
         setRating(value);
-        if (onRatingSelect) {
-            onRatingSelect(value);
-        }
-        dispatch(updateUserRating({ "rating": value }));
+        dispatch(updateUserRating({ id: otherUserId, rating: value }));
     };
+
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -28,7 +26,7 @@ const StarRating = ({ onRatingSelect }) => {
                             style={{ display: 'none' }}
                             onClick={() => handleClick(ratingValue)}
                         />
-                        z <FaStar
+                        <FaStar
                             size={30}
                             color={ratingValue <= (hover || rating) ? '#ffc107' : '#e4e5e9'}
                             style={{

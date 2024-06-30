@@ -36,8 +36,8 @@ const BlogPostPage = () => {
                     <div className='w-full bg-white rounded-md p-10'>
                         <PostDetails post={singlePost} />
                         <CommentList post={singlePost} />
-                        {/* {currentUser && <AddComment postId={singlePost._id} />} */}
-                        <AddComment postId={singlePost._id} />
+                        {currentUser && <AddComment postId={singlePost._id} />}
+                        {/* <AddComment postId={singlePost._id} /> */}
                     </div>
                 }
             </div>

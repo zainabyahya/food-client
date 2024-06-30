@@ -13,11 +13,12 @@ export const addFoodPost = createAsyncThunk('food/addFoodPost', async (formData,
     }
 });
 
-export const updateFoodPost = createAsyncThunk('food/updateFoodPost', async ({ foodPostId, formData }, { rejectWithValue }) => {
+export const updateFoodPost = createAsyncThunk('food/updateFoodPost', async (data, { rejectWithValue }) => {
+
     try {
-        const response = await instance.put(`/food/${foodPostId}`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const response = await instance.put(`/food/update/${data._id}`, data);
+        console.log("🚀 ~ updateFoodPost ~ response.data.updatedFoodPost:", response.data.updatedFoodPost)
+
         return response.data.updatedFoodPost;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -91,6 +92,7 @@ const foodSlice = createSlice({
                 if (index !== -1) {
                     state.foodPosts[index] = action.payload;
                 }
+                state.foodPost = action.payload;
             })
             .addCase(updateFoodPost.rejected, (state, action) => {
                 state.loading = false;

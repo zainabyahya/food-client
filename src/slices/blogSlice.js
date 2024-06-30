@@ -45,9 +45,11 @@ export const deleteBlogPost = createAsyncThunk('blog/deleteBlogPost', async (pos
     }
 });
 
-export const updateBlogPost = createAsyncThunk('blog/updateBlogPost', async ({ postId, formData }) => {
+export const updateBlogPost = createAsyncThunk('blog/updateBlogPost', async (data) => {
     try {
-        const response = await instance.put(`/blogs/${postId}`, formData);
+        const response = await instance.put(`/blogs/update/${data._id}`, data);
+        console.log("🚀 ~ updateBlogPost ~ esponse.data.updatedBlogPost:", response.data.updatedBlogPost)
+
         return response.data.updatedBlogPost;
     } catch (error) {
         throw error;

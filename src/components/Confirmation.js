@@ -8,24 +8,45 @@ const Confirmation = ({ confirmation }) => {
     const user = useSelector((state) => state.auth.currentToken);
     const dispatch = useDispatch();
     let status, isPending;
+
     if (confirmation) {
         status = confirmation.status;
         isPending = (status === "pending") || (status === "partiallyConfirmed");
     }
     const handleConfirm = () => {
+        let updateData = {};
         if (user.userId === confirmation.user) {
-            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByUser": true }))
+            updateData = {
+                confirmationId: confirmation._id,
+                confirmedByUser: "confirmed"
+            };
         } else if (user.userId === confirmation.owner) {
-            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByOwner": true }))
+            updateData = {
+                confirmationId: confirmation._id,
+                confirmedByOwner: "confirmed"
+            };
         }
-    }
+        console.log("🚀 ~ handleConfirm ~ updateData:", updateData)
+        dispatch(updateConfirmation(updateData));
+    };
+
     const handleReject = () => {
+        let updateData = {};
         if (user.userId === confirmation.user) {
-            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByUser": false }))
+            updateData = {
+                confirmationId: confirmation._id,
+                confirmedByUser: "rejected"
+            };
         } else if (user.userId === confirmation.owner) {
-            dispatch(updateConfirmation({ confirmationId: confirmation._id, "confirmByOwner": false }))
+            updateData = {
+                confirmationId: confirmation._id,
+                confirmedByOwner: "rejected"
+            };
         }
-    }
+        console.log("🚀 ~ handleConfirm ~ updateData:", updateData)
+        dispatch(updateConfirmation(updateData));
+    };
+
     return (
         <div className='w-1/4 self-center m-3 p-5 text-xl'>
             {

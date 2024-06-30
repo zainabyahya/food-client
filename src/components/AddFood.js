@@ -8,7 +8,9 @@ import { Oval } from 'react-loader-spinner'
 Modal.setAppElement('#root');
 
 const AddFood = ({ isOpen, onRequestClose }) => {
-    const { userLocation, getUserLocation, error } = useUserLocation();
+    const { userLocation, getUserLocation, isLoading, error } = useUserLocation();
+    console.log("🚀 ~ AddFood ~ userLocation:", userLocation)
+    console.log("🚀 ~ AddFood ~ error:", error)
     const [formData, setFormData] = useState({
         title: '',
         notes: '',
@@ -16,7 +18,8 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         image: null
     });
     const [loading, setLoading] = useState(false);
-
+    const [imageAdded, setImageAdded] = useState(false);
+    const [locationAdded, setLocationAdded] = useState(false);
     const dispatch = useDispatch();
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,6 +34,15 @@ const AddFood = ({ isOpen, onRequestClose }) => {
             ...prevData,
             image: e.target.files[0]
         }));
+        setImageAdded(true);
+    };
+
+
+    const handleGetLocation = () => {
+        getUserLocation();
+        if (userLocation) {
+            setLocationAdded(true);
+        }
     };
 
     const handlePost = async (e) => {
@@ -44,9 +56,11 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         data.append('image', formData.image);
         data.append('location', JSON.stringify(userLocation));
         data.append('dateCreated', new Date());
+        console.log("🚀 ~ AddFood ~ formData:", formData)
 
 
         try {
+
             await dispatch(addFoodPost(data));
             setFormData({
                 title: '',
@@ -54,6 +68,9 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                 time: '',
                 image: null
             });
+
+            setImageAdded(false);
+            setLocationAdded(false);
             onRequestClose();
         } catch (error) {
             console.error("Error adding food post:", error);
@@ -103,13 +120,13 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                                 class="custom-file-upload"
 
                             />
-                            صورة الطبق
+                            {imageAdded ? "تم إضافة الصورة" : "صورة الطبق"}
                         </label>
 
                         <input
                             className='w-full bg-gray py-2 px-2 rounded-md'
                             type='text'
-                            placeholder='العنوان'
+                            placeholder='اسم الطبق'
                             name='title'
                             value={formData.title}
                             onChange={handleChange}
@@ -132,16 +149,17 @@ const AddFood = ({ isOpen, onRequestClose }) => {
                             onChange={handleChange}
                             required
                         />
-                        <span className={`w-full bg-gray p-2 rounded-md text-center`} onClick={getUserLocation} value={userLocation}>
-                            حدد موقعك
+                        <span className={`w-full bg-gray p-2 rounded-md text-center cursor-pointer`} onClick={handleGetLocation} value={userLocation}>
+                            {locationAdded ? "تم تحديد الموقع" : "حدد موقعك"}
                         </span>
-                        <button type='submit' className='bg-secondary text-white p-3 rounded-md w-full'>
+
+                        <button disabled={isLoading} type='submit' className={`${isLoading ? "bg-gray text-[#000]" : "bg-secondary  text-white"} p-3 rounded-md w-full`} >
                             تبرع بالطعام
                         </button>
                     </form>
                 )}
             </div>
-        </Modal>
+        </Modal >
     );
 };
 

@@ -3,12 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { IoLocationOutline, IoTimeOutline, IoStar } from "react-icons/io5";
 import { BsArrowRight } from "react-icons/bs";
-import { getFoodPostById } from '../slices/foodSlice';
+import { deleteFoodPost, getFoodPostById } from '../slices/foodSlice';
 import { createConfirmation } from '../slices/confirmationSlice';
 import { addChatroom } from '../slices/chatroomSlice';
 import getAverageRating from '../utils/rating';
 import GoogleMapReact from 'google-map-react';
 import { getDistance } from '../utils/getDistance';
+import { IoPencil, IoTrash } from "react-icons/io5";
+import EditFood from './EditFood';
+import { current } from '@reduxjs/toolkit';
 
 const FoodDetails = () => {
     const dispatch = useDispatch();
@@ -17,11 +20,21 @@ const FoodDetails = () => {
     const { foodPost, loading, error } = useSelector((state) => state.food);
     const currentChatroom = useSelector((state) => state.chatroom.chatroom);
     const chatroomLoading = useSelector((state) => state.chatroom.loading);
-    const confirmation = useSelector((state) => state.confirmation.confirmation);
+    // const confirmation = useSelector((state) => state.confirmation.confirmation);
 
     const currentUser = useSelector((state) => state.auth.currentToken);
     const userLocation = useSelector((state) => state.auth.location)
     console.log("🚀 ~ FoodDetails ~ userLocation:", userLocation)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log("🚀 ~ FoodDetails ~ isModalOpen:", isModalOpen)
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     let isOwner = false;
     let showOrder = false;
@@ -29,33 +42,26 @@ const FoodDetails = () => {
     const handleOrder = async () => {
         const ownerId = foodPost.owner._id;
         const users = [currentUser.userId, ownerId]
-        await dispatch(addChatroom(users))
+        await dispatch(addChatroom(users));
+
+        if (!chatroomLoading && currentChatroom) {
+            const chatroomId = currentChatroom._id;
+            navigate(`/chats/${chatroomId}`)
+        }
     }
+
+    const handleDelete = () => {
+        dispatch(deleteFoodPost(foodPostId));
+        navigate("/");
+    };
 
     if (foodPost && currentUser) {
         isOwner = foodPost.owner._id === currentUser.userId;
         showOrder = currentUser && !isOwner;
     }
 
-
-    useEffect(() => {
-        // navigate to chat when اطلب الان is pressed
-        if (currentChatroom) {
-            const chatroomId = currentChatroom._id;
-            const orderInfo = {
-                owner: foodPost.owner._id,
-                post: foodPostId,
-            }
-            dispatch(createConfirmation(orderInfo)).then((confirmation) => {
-                navigate(`/chats/${chatroomId}`, { state: { confirmation } })
-            });
-
-        }
-    }, [currentChatroom])
-
     useEffect(() => {
         dispatch(getFoodPostById(foodPostId));
-
     }, [dispatch]);
 
     const renderMarkers = (map, maps) => {
@@ -81,11 +87,23 @@ const FoodDetails = () => {
             {foodPost && <div className='flex flex-col lg:flex-row-reverse bg-white w-full min-h-[80vh] p-10 lg:p-20 rounded-lg'>
                 <img src={foodPost.image} alt='food' className='h-1/2 lg:h-auto lg:w-1/3 object-cover overflow-hidden rounded-lg' />
                 <div className='lg:w-1/3 flex flex-col justify-center lg:justify-start items-end  gap-5 py-10 lg:py-0 lg:px-10 lg:text-lg xl:text-xl lg:text-end'>
-                    <span className='w-full flex flex-row-reverse justify-between items-center  gap-5 py-2'>
+                    <span className='w-full flex flex-wrap flex-row-reverse justify-between items-center  gap-5 py-2'>
                         <h1 className='text-secondary text-xl lg:text-3xl xl:text-6xl'> {foodPost.title}</h1>
                         {showOrder &&
                             <button className='bg-secondary text-white px-5 lg:py-1 xl:py-3 rounded-lg' onClick={handleOrder}>اطلب الآن</button>
-                        }                    </span>
+                        }
+                        {isOwner &&
+                            <div>
+                                <button onClick={handleOpenModal} className='text-secondary'>
+                                    <IoPencil size={"1.5rem"} />
+                                </button>
+                                <button onClick={handleDelete} className='text-secondary'>
+                                    <IoTrash size={"1.5rem"} />
+                                </button>
+                            </div>
+
+                        }
+                    </span>
                     <span className='flex flex-row-reverse justify-start items-center gap-5 py-2'>
                         <span className='text-[#9e9d9d] '> {foodPost.owner.firstName} {foodPost.owner.lastName} </span>
                         <span className='flex flex-row-reverse justify-center items-center gap-3'><IoStar className='text-[#FFCD3C]' /><span> {getAverageRating(foodPost.owner.ratingSum, foodPost.owner.ratingCount)}</span></span>
@@ -102,6 +120,7 @@ const FoodDetails = () => {
                             : `${getDistance(userLocation, foodPost.location)} km`}
                     </span>
                     <span className='flex flex-row-reverse justify-center items-center lg:items-start gap-3'><IoTimeOutline className='text-primary' /> {foodPost.time}</span>
+                    <EditFood isOpen={isModalOpen} onRequestClose={handleCloseModal} foodPost={foodPost} />
                 </div>
                 <div className='lg:w-1/3 h-full'>
                     <div style={{ height: '65vh', width: '100%' }}>

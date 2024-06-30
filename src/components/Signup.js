@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ const Signup = () => {
     const navigate = useNavigate();
     const { loading, error } = useSelector((state) => state.auth);
     console.log("🚀 ~ Signup ~ error:", error)
+    const [imageAdded, setImageAdded] = useState(false);
 
     return (
         <div className=" h-[91vh] p-10 lg:p-0 md:w-3/5 lg:w-full m-auto lg:flex overflow-hidden">
@@ -22,7 +23,7 @@ const Signup = () => {
                         phoneNumber: '',
                         password: '',
                         confirmPassword: '',
-                        image: null
+                        image: null,
                     }}
                     validationSchema={Yup.object({
                         firstName: Yup.string().required('الاسم الاول مطلوب'),
@@ -58,6 +59,7 @@ const Signup = () => {
                             })
                             .finally(() => {
                                 setSubmitting(false);
+                                setImageAdded(false);
                             });
                     }}
                 >
@@ -140,10 +142,11 @@ const Signup = () => {
                                         accept="image/*"
                                         onChange={(event) => {
                                             setFieldValue("image", event.currentTarget.files[0]);
+                                            setImageAdded(true);
                                         }}
                                     />
-
-                                    صورة شخصية</label>
+                                    {imageAdded ? "تم إضافة الصورة" : "الصورة الشخصية"}
+                                </label>
                             </div>
                             <div className="bg-secondary text-white w-full rounded-lg p-2 mx-5">
                                 <button

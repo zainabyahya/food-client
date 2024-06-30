@@ -13,8 +13,8 @@ const ChatList = () => {
 
     const getUser = (chatroom) => {
         const users = chatroom.users;
-        const user = users.find((user) =>
-            user.toString() !== userId.toString()
+        const user = users?.find((user) =>
+            user?._id?.toString() !== userId.toString()
         )
         return user;
     }

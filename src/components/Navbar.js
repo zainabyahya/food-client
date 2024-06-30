@@ -24,13 +24,13 @@ const Navbar = ({ user }) => {
     };
     return (
         <div>
-            <div className='w-full h-[5rem] text-3xl bg-primary text-white md:hidden flex flex-row-reverse justify-between items-center'>
+            <div className='w-full h-[5rem] text-3xl bg-primary text-white lg:hidden flex flex-row-reverse justify-between items-center'>
                 <span className='font-[vibes] p-5 '>بالعافية</span>
                 <button className="p-5 text-white" onClick={() => { setDropdown(!dropdown) }} >
                     <BsList />
                 </button>
             </div>
-            <div className={`bg-primary text-white flex-col items-center border-b-[1px] md:hidden -z-10 ${!dropdown ? "hidden" : "flex"}`} id="navbar-hamburger">
+            <div className={`bg-primary text-white flex-col items-center border-b-[1px] lg:hidden -z-10 ${!dropdown ? "hidden" : "flex"}`} id="navbar-hamburger">
                 {
                     [
                         ['1', 'المجتمع', '/community'],
@@ -62,8 +62,8 @@ const Navbar = ({ user }) => {
                 <AddFood isOpen={isModalOpen} onRequestClose={handleCloseModal} />
 
             </div>
-            <div className='hidden md:block w-full l bg-primary'>
-                <div className='m-auto w-3/5 flex h-[5rem] text-xl text-white flex-row-reverse justify-center items-end gap-10'>
+            <div className='hidden lg:block w-full l bg-primary'>
+                <div className='m-auto w-4/5 flex h-[5rem] text-xl text-white flex-row-reverse justify-center items-end gap-10'>
                     {
                         [
                             ['2', 'الرسائل', '/chats'],
@@ -85,6 +85,7 @@ const Navbar = ({ user }) => {
                                     return <span key={id} onClick={() => { navigate("/auth") }} className="p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
                                 } else {
                                     return <span key={id} onClick={() => { navigate(url) }} className=" p-5 hover:underline text-lg lg:text-xl cursor-pointer ">{title}</span>
+
                                 }
                             } else {
                                 if (id === "6") {
