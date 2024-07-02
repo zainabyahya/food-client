@@ -28,7 +28,7 @@ const Chat = () => {
         if (chatroom) {
             dispatch(getConfirmationByUsersIds(chatroom.users))
         }
-    }, [dispatch, chatroomId]);
+    }, [dispatch, chatroomId, chatroom]);
 
     useEffect(() => {
         if (chatContainerRef.current) {

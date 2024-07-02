@@ -58,7 +58,7 @@ const FoodDetails = () => {
 
     useEffect(() => {
         dispatch(getFoodPostById(foodPostId));
-    }, [dispatch]);
+    }, [dispatch, foodPostId]);
 
     const renderMarkers = (map, maps) => {
         new maps.Marker({
