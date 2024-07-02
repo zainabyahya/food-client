@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { IoClose, IoCheckmarkOutline } from "react-icons/io5";
 import { updateConfirmation } from '../slices/confirmationSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,6 @@ const Confirmation = ({ confirmation }) => {
                 confirmedByOwner: "confirmed"
             };
         }
-        console.log("🚀 ~ handleConfirm ~ updateData:", updateData)
         dispatch(updateConfirmation(updateData));
     };
 
@@ -43,7 +42,6 @@ const Confirmation = ({ confirmation }) => {
                 confirmedByOwner: "rejected"
             };
         }
-        console.log("🚀 ~ handleConfirm ~ updateData:", updateData)
         dispatch(updateConfirmation(updateData));
     };
 

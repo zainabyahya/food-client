@@ -8,7 +8,7 @@ const UserPostList = ({ userId, limit }) => {
     const { blogPosts, loading, error } = useSelector((state) => state.blog);
     useEffect(() => {
         dispatch(fetchBlogPostsByAuthor(userId));
-    }, [dispatch]);
+    }, [dispatch, userId]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;

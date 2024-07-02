@@ -8,14 +8,13 @@ const CommentList = ({ post }) => {
     const postId = post._id;
     const dispatch = useDispatch();
     const commentsList = useSelector((state) => state.comment.comments);
-    console.log("🚀 ~ CommentList ~ commentsList:", commentsList)
     const currentUser = useSelector((state) => state.auth.currentToken);
 
     const checkOwner = (comment) => {
         return comment.user._id === currentUser.userId;
     }
     useEffect(() => {
-        dispatch(fetchCommentsByPost(post._id));
+        dispatch(fetchCommentsByPost(postId));
     }, [dispatch, postId]);
     return (
         <div className='w-full flex flex-col items-end justify-center gap-3'>

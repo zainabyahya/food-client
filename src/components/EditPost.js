@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateBlogPost, getBlogPostById } from '../slices/blogSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { updateBlogPost } from '../slices/blogSlice';
 import Modal from 'react-modal';
 import { IoClose } from "react-icons/io5";
 import ReactQuill from 'react-quill';
@@ -13,7 +13,6 @@ Modal.setAppElement('#root');
 const EditPost = ({ isOpen, onRequestClose, post }) => {
     const { postId } = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
@@ -30,7 +29,6 @@ const EditPost = ({ isOpen, onRequestClose, post }) => {
         setLoading(true);
 
         const updatedPost = { ...post, title, content };
-        console.log("🚀 ~ handleSubmit ~ updatedPost:", updatedPost)
         try {
             await dispatch(updateBlogPost(updatedPost));
             onRequestClose();

@@ -67,9 +67,6 @@ const Signup = () => {
                         <Form className="flex flex-col gap-5 lg:justify-center items-center p-5 pt-10 lg:w-2/3 xl:w-1/3 lg:m-auto absulote z-20">
                             <div className='flex flex-row-reverse justify-center items-center w-full gap-2'>
                                 <div className="flex flex-col w-1/2">
-                                    {/* <label className="self-end p-1" htmlFor="firstName">
-                                        الاسم الاول
-                                    </label> */}
                                     <Field
                                         className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                         id="firstName"
@@ -80,9 +77,6 @@ const Signup = () => {
                                     <ErrorMessage name="firstName" component="div" className="text-red-500" />
                                 </div>
                                 <div className="flex flex-col w-1/2">
-                                    {/* <label className="self-end p-1" htmlFor="lastName">
-                                        اسم العائلة
-                                    </label> */}
                                     <Field
                                         className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                         id="lastName"
@@ -94,9 +88,6 @@ const Signup = () => {
                                 </div>
                             </div>
                             <div className="flex flex-col w-full">
-                                {/* <label className="self-end p-1" htmlFor="phoneNumber">
-                                    رقم الهاتف
-                                </label> */}
                                 <Field
                                     className="drop-shadow-lg rounded-lg bg-white w-full p-3 "
                                     id="phoneNumber"
@@ -107,9 +98,6 @@ const Signup = () => {
                                 <ErrorMessage name="phoneNumber" component="div" className="text-red-500" />
                             </div>
                             <div className="flex flex-col w-full">
-                                {/* <label className="self-end p-1" htmlFor="password">
-                                    كلمة السر
-                                </label> */}
                                 <Field
                                     className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                     id="password"
@@ -120,9 +108,6 @@ const Signup = () => {
                                 <ErrorMessage name="password" component="div" className="text-red-500" />
                             </div>
                             <div className="flex flex-col w-full">
-                                {/* <label className="self-end p-1" htmlFor="confirmPassword">
-                                    تأكيد كلمة السر
-                                </label> */}
                                 <Field
                                     className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                     id="confirmPassword"

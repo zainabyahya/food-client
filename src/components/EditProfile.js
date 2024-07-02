@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 import { IoClose } from "react-icons/io5";
-import { updateUser, getUserById } from '../slices/userSlice';
+import { updateUser } from '../slices/userSlice';
 import { Oval } from 'react-loader-spinner';
 
 Modal.setAppElement('#root');
@@ -40,7 +40,6 @@ const EditProfile = ({ isOpen, onRequestClose, user }) => {
             phoneNumber,
             image,
         };
-        console.log("🚀 ~ handleSubmit ~ updatedUser:", updatedUser)
 
         try {
             await dispatch(updateUser(updatedUser));

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import useUserLocation from '../hooks/useUserLocation';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setLocation } from '../slices/authSlice';
 import { IoLocationOutline } from "react-icons/io5";
 

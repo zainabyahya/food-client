@@ -8,9 +8,7 @@ import { Oval } from 'react-loader-spinner'
 Modal.setAppElement('#root');
 
 const AddFood = ({ isOpen, onRequestClose }) => {
-    const { userLocation, getUserLocation, isLoading, error } = useUserLocation();
-    console.log("🚀 ~ AddFood ~ userLocation:", userLocation)
-    console.log("🚀 ~ AddFood ~ error:", error)
+    const { userLocation, getUserLocation, isLoading } = useUserLocation();
     const [formData, setFormData] = useState({
         title: '',
         notes: '',
@@ -75,7 +73,7 @@ const AddFood = ({ isOpen, onRequestClose }) => {
         } catch (error) {
             console.error("Error adding food post:", error);
         } finally {
-            setLoading(false);  // Set loading to false after the operation is complete
+            setLoading(false);
         }
     };
 

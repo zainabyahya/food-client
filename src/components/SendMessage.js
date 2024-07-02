@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addMessage } from '../slices/messageSlice';
-import { selectUser } from '../slices/authSlice';
 
 const SendMessage = ({ chatroomId }) => {
     const [text, setText] = useState('');
     const dispatch = useDispatch();
-    const currentToken = useSelector((state) => state.auth.currentToken)
 
     const handleMessage = (e) => {
         e.preventDefault();

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { getChatroomByUser } from '../slices/chatroomSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUser } from '../slices/authSlice'
 import { useNavigate } from 'react-router-dom'
 
 const ChatList = () => {

@@ -42,21 +42,16 @@ const PostDetails = ({ post }) => {
     }
 
     useEffect(() => {
-        // dispatch(getAllBookmarks());
         if (currentUser) dispatch(getBookmarksByUserId(userId))
-    }, [dispatch]);
+    }, [dispatch, currentUser, userId]);
 
     useEffect(() => {
         if (currentUser && bookmarks) {
-            console.log("🚀 ~ useEffect ~ bookmarks:", bookmarks)
-            // const bookmark = bookmarks.some(bookmark => bookmark.user === currentUser.userId &&
-            //     bookmark.posts.some(post => post._id === postId)
-            // );
             const bookmark = bookmarks.some((post) => post._id === postId);
             console.log("-----" + bookmark);
             setSaved(bookmark);
         }
-    }, [bookmarks]);
+    }, [bookmarks, currentUser, postId]);
 
     let isAuthor = false;
     if (currentUser && author) {

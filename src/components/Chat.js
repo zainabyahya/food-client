@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMessagesByChatroom } from '../slices/messageSlice'
-import { getConfirmationByPostId, getConfirmationByUsersIds } from '../slices/confirmationSlice';
+import { getConfirmationByUsersIds } from '../slices/confirmationSlice';
 import { useParams } from 'react-router-dom';
 import SendMessage from '../components/SendMessage';
-import Confirmation from './Confirmation';
 import { getChatroomsById } from '../slices/chatroomSlice';
 import Rating from './Rating';
 
@@ -14,8 +13,6 @@ const Chat = () => {
     const messages = useSelector((state) => state.message.messages);
     const chatroom = useSelector((state) => state.chatroom.chatroom);
     const currentUser = useSelector((state) => state.auth.currentToken);
-    const { confirmation } = useSelector((state) => state.confirmation);
-    console.log("🚀 ~ Chat ~ confirmation:", confirmation)
     const chatContainerRef = useRef(null);
 
 
@@ -29,11 +26,7 @@ const Chat = () => {
         dispatch(getMessagesByChatroom(chatroomId));
         dispatch(getChatroomsById(chatroomId))
         if (chatroom) {
-            console.log("🚀 ~ useEffect ~ chatroom:", chatroom)
-            // dispatch(getConfirmationByPostId(confirmation._id))
             dispatch(getConfirmationByUsersIds(chatroom.users))
-            console.log("🚀 ~ useEffect ~ chatroom.users:", chatroom.users)
-
         }
     }, [dispatch, chatroomId]);
 

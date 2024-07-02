@@ -35,9 +35,6 @@ const Login = () => {
                     {({ isSubmitting }) => (
                         <Form className="flex flex-col gap-10 lg:justify-center items-center p-5 pt-10 lg:w-2/3 xl:w-1/3 lg:m-auto z-20">
                             <div className="flex flex-col w-full">
-                                {/* <label className="self-end p-1" htmlFor="phoneNumber">
-                                    رقم الهاتف
-                                </label> */}
                                 <Field
                                     className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                     id="phoneNumber"
@@ -48,9 +45,6 @@ const Login = () => {
                                 <ErrorMessage name="phoneNumber" component="div" className="text-red-500" />
                             </div>
                             <div className="flex flex-col w-full">
-                                {/* <label className="self-end p-1" htmlFor="password">
-                                    كلمة السر
-                                </label> */}
                                 <Field
                                     className="drop-shadow-lg rounded-lg bg-white w-full p-3"
                                     id="password"

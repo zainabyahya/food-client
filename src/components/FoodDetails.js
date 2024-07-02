@@ -4,14 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoLocationOutline, IoTimeOutline, IoStar } from "react-icons/io5";
 import { BsArrowRight } from "react-icons/bs";
 import { deleteFoodPost, getFoodPostById } from '../slices/foodSlice';
-import { createConfirmation } from '../slices/confirmationSlice';
 import { addChatroom } from '../slices/chatroomSlice';
 import getAverageRating from '../utils/rating';
 import GoogleMapReact from 'google-map-react';
 import { getDistance } from '../utils/getDistance';
 import { IoPencil, IoTrash } from "react-icons/io5";
 import EditFood from './EditFood';
-import { current } from '@reduxjs/toolkit';
 
 const FoodDetails = () => {
     const dispatch = useDispatch();
@@ -24,9 +22,7 @@ const FoodDetails = () => {
 
     const currentUser = useSelector((state) => state.auth.currentToken);
     const userLocation = useSelector((state) => state.auth.location)
-    console.log("🚀 ~ FoodDetails ~ userLocation:", userLocation)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log("🚀 ~ FoodDetails ~ isModalOpen:", isModalOpen)
 
     const handleOpenModal = () => {
         setIsModalOpen(true);

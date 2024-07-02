@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addComment } from '../slices/commentSlice';
 const AddComment = ({ postId }) => {
     const [comment, setComment] = useState('');
     const dispatch = useDispatch();
-    const token = useSelector(state => state.auth.user)
 
     const handleComment = (e) => {
         e.preventDefault();

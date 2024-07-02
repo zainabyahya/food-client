@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
-import image from '../assets/1.jpeg';
-// import { FaRegCommentAlt, FaBookmark, FaRegBookmark } from "react-icons/fa";
+import React from 'react'
 import FormattedContent from './FormattedContent'; // 
 import { useNavigate } from 'react-router-dom';
 
